@@ -546,9 +546,6 @@
             android:text="@string/send_verification_link_again"
             android:textColor="#FFFFFF" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
 
         <TextView
             android:id="@+id/Lo"
@@ -559,6 +556,7 @@
             android:editable="false"
             android:fontFamily="@font/calistoga"
             android:gravity="center"
+            android:layout_marginTop="50dp"
             android:text="If Verified Login Here To Access"
             android:textColor="#3D5AFE"
             android:textColorHighlight="#000000"
