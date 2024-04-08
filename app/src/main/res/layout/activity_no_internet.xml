@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/no_internet_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/no_internet" />
+
+    <TextView
+        android:id="@+id/no_internet_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/no_internet_image"
+        android:fontFamily="@font/calistoga"
+        android:text="No Internet Connection"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/no_internet_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/no_internet_title"
+        android:fontFamily="@font/calistoga"
+        android:text="Please check your internet connection and try again."
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/no_internet_retry_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/no_internet_message"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/round_btn"
+        android:fontFamily="@font/calistoga"
+        android:text="Retry"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+</RelativeLayout>

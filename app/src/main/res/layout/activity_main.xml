@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:visibility="visible"
+    tools:context=".MainActivity">
+
+
+    <LinearLayout
+        android:id="@+id/main_layout"
+        android:layout_width="409dp"
+        android:layout_height="912dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:isScrollContainer="false"
+        android:orientation="vertical"
+        android:padding="4dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="415dp"
+            android:background="@drawable/textview_border"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp">
+
+            <TextView
+                android:id="@+id/login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5px"
+                android:duplicateParentState="false"
+                android:editable="false"
+                android:fontFamily="@font/calistoga"
+                android:gravity="center"
+                android:text="Login"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textColorHighlight="#000000"
+                android:textColorHint="#000000"
+                android:textSize="48sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                tools:ignore="Deprecated,HardcodedText,PxUsage" />
+
+            <EditText
+                android:id="@+id/email_text_box"
+                android:layout_width="match_parent"
+                android:layout_height="150px"
+                android:layout_margin="10px"
+                android:layout_marginBottom="5px"
+                android:autofillHints="Enter Email"
+                android:background="@drawable/textview_border"
+                android:ems="10"
+                android:fontFamily="@font/calistoga"
+                android:gravity="left"
+                android:hint="Enter Gmail Id"
+                android:inputType="textEmailAddress"
+                android:padding="5dp"
+                android:selectAllOnFocus="false"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHighlight="#000000"
+                android:textColorHint="#000000"
+                android:textColorLink="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                tools:ignore="HardcodedText,LabelFor,PxUsage,RtlHardcoded"
+                tools:visibility="visible" />
+
+            <EditText
+                android:id="@+id/Password_text_box"
+                android:layout_width="match_parent"
+                android:layout_height="150px"
+                android:layout_margin="10px"
+                android:layout_marginBottom="5px"
+                android:autoText="false"
+                android:autofillHints=""
+                android:background="@drawable/textview_border"
+                android:ems="10"
+                android:fontFamily="@font/calistoga"
+                android:gravity="left"
+                android:hint="Enter Password"
+                android:inputType="textPassword"
+                android:padding="5dp"
+                android:password="true"
+                android:selectAllOnFocus="false"
+                android:singleLine="true"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                tools:ignore="Deprecated,HardcodedText,PxUsage,RtlHardcoded"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/button_login"
+                android:layout_width="200dp"
+                android:layout_height="150px"
+                android:layout_margin="10px"
+                android:autoLink="all"
+                android:background="@drawable/round_btn"
+                android:cursorVisible="true"
+                android:fontFamily="@font/calistoga"
+                android:gravity="center"
+                android:longClickable="true"
+                android:paddingHorizontal="0px"
+                android:text="Login"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:strokeColor="#000000"
+                tools:ignore="HardcodedText,PxUsage,TextViewEdits,DuplicateSpeakableTextCheck"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/L_R"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:duplicateParentState="false"
+                android:editable="false"
+                android:fontFamily="@font/calistoga"
+                android:gravity="center"
+                android:text="@string/new_user_login_here"
+                android:textColor="#3D5AFE"
+                android:textColorHighlight="#000000"
+                android:textColorHint="#000000"
+                android:textColorLink="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:ignore="Deprecated,TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/forgot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:clickable="true"
+                android:duplicateParentState="false"
+                android:editable="false"
+                android:fontFamily="@font/calistoga"
+                android:gravity="center"
+                android:text="Fogot Password?"
+                android:textColor="#3D5AFE"
+                android:textColorHighlight="#000000"
+                android:textColorHint="#000000"
+                android:textColorLink="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                tools:ignore="Deprecated,TouchTargetSizeCheck" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Register_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="4dp"
+        android:scrollIndicators="none"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_border"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="10dp"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5px"
+                android:duplicateParentState="false"
+                android:editable="false"
+                android:fontFamily="@font/calistoga"
+                android:gravity="center"
+                android:text="Register"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textColorHighlight="#000000"
+                android:textColorHint="#000000"
+                android:textSize="48sp"
+                android:visibility="visible"
+                tools:ignore="Deprecated,HardcodedText,PxUsage" />
+
+            <EditText
+                android:id="@+id/Full_Name"
+                android:layout_width="match_parent"
+                android:layout_height="150px"
+                android:layout_margin="10px"
+                android:layout_marginBottom="5px"
+                android:autofillHints=""
+                android:ems="10"
+                android:fontFamily="@font/calistoga"
+                android:hint="Enter Full Name"
+                android:inputType="textEmailAddress"
+                android:padding="5px"
+                android:textAlignment="textStart"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textIsSelectable="false"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,PxUsage" />
+
+            <EditText
+                android:id="@+id/email_text_box2"
+                android:layout_width="match_parent"
+                android:layout_height="150px"
+                android:layout_margin="10px"
+                android:layout_marginBottom="5px"
+                android:autofillHints=""
+                android:ems="10"
+                android:fontFamily="@font/calistoga"
+                android:hint="Enter Gmail Id"
+                android:inputType="textEmailAddress"
+                android:padding="5px"
+                android:textAlignment="textStart"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textIsSelectable="false"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,PxUsage" />
+
+            <EditText
+                android:id="@+id/phone_text_box"
+                android:layout_width="match_parent"
+                android:layout_height="150px"
+                android:layout_margin="10px"
+                android:layout_marginBottom="5px"
+                android:autofillHints=""
+                android:ems="10"
+                android:fontFamily="@font/calistoga"
+                android:hint="Enter Phone Number"
+                android:inputType="phone"
+                android:paddingHorizontal="5px"
+                android:textAlignment="textStart"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textIsSelectable="false"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,PxUsage" />
+
+            <EditText
+                android:id="@+id/password_text_box3"
+                android:layout_width="match_parent"
+                android:layout_height="150px"
+                android:layout_margin="10px"
+                android:layout_marginBottom="5px"
+                android:autofillHints=""
+                android:ems="10"
+                android:fontFamily="@font/calistoga"
+                android:hint="Enter Password"
+                android:inputType="textPassword"
+                android:paddingHorizontal="5px"
+                android:password="true"
+                android:textAlignment="textStart"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textIsSelectable="false"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:ignore="Deprecated,HardcodedText,PxUsage" />
+
+            <EditText
+                android:id="@+id/check_password_text_box"
+                android:layout_width="match_parent"
+                android:layout_height="150px"
+                android:layout_margin="10px"
+                android:layout_marginBottom="5px"
+                android:autofillHints=""
+                android:ems="10"
+                android:enabled="true"
+                android:fontFamily="@font/calistoga"
+                android:hint="Enter password Again"
+                android:inputType="text"
+                android:padding="5px"
+                android:password="false"
+                android:textAlignment="textStart"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textIsSelectable="false"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:ignore="Deprecated,HardcodedText,PxUsage" />
+
+            <EditText
+                android:id="@+id/Refer"
+                android:layout_width="match_parent"
+                android:layout_height="150px"
+                android:layout_margin="10px"
+                android:layout_marginBottom="5px"
+                android:autofillHints=""
+                android:ems="10"
+                android:fontFamily="@font/calistoga"
+                android:hint="Refer By (If Available)"
+                android:inputType="textEmailAddress"
+                android:padding="5px"
+                android:textAlignment="textStart"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textIsSelectable="false"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,PxUsage" />
+
+            <Button
+                android:id="@+id/Button_r2"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10px"
+                android:autoLink="all"
+                android:background="@drawable/round_btn"
+                android:cursorVisible="true"
+                android:fontFamily="@font/calistoga"
+                android:gravity="center"
+                android:longClickable="true"
+                android:paddingHorizontal="0px"
+                android:text="Register"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:strokeColor="#000000"
+                tools:ignore="HardcodedText,PxUsage,TextViewEdits" />
+
+            <Button
+                android:id="@+id/Button_otp"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10px"
+                android:autoLink="all"
+                android:background="@drawable/round_btn"
+                android:cursorVisible="true"
+                android:fontFamily="@font/calistoga"
+                android:gravity="center"
+                android:longClickable="true"
+                android:paddingHorizontal="0px"
+                android:text="Send Otp"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:strokeColor="#000000"
+                tools:ignore="HardcodedText,PxUsage,TextViewEdits" />
+
+            <EditText
+                android:id="@+id/otp_text_box"
+                android:layout_width="match_parent"
+                android:layout_height="150px"
+                android:layout_margin="10px"
+                android:layout_marginBottom="5px"
+                android:autofillHints=""
+                android:ems="10"
+                android:enabled="true"
+                android:fontFamily="@font/calistoga"
+                android:hint="Enter otp"
+                android:inputType="numberPassword"
+                android:padding="5px"
+                android:password="false"
+                android:textAlignment="textStart"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textIsSelectable="false"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:ignore="Deprecated,HardcodedText,PxUsage" />
+
+            <Button
+                android:id="@+id/button_register"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:layout_margin="10px"
+                android:autoLink="all"
+                android:background="@drawable/round_btn"
+                android:cursorVisible="true"
+                android:fontFamily="@font/calistoga"
+                android:gravity="center"
+                android:longClickable="true"
+                android:paddingHorizontal="0px"
+                android:text="Register"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:strokeColor="#000000"
+                tools:ignore="HardcodedText,PxUsage,TextViewEdits,DuplicateSpeakableTextCheck" />
+
+            <TextView
+                android:id="@+id/Resend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                android:duplicateParentState="false"
+                android:editable="false"
+                android:fontFamily="@font/font"
+                android:gravity="center"
+                android:text="@string/resend_otp"
+                android:textColor="#3D5AFE"
+                android:textColorHighlight="#000000"
+                android:textColorHint="#000000"
+                android:textColorLink="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:ignore="Deprecated,TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/R_L"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:duplicateParentState="false"
+                android:editable="false"
+                android:fontFamily="@font/calistoga"
+                android:gravity="center"
+                android:text="@string/already_registerd_login_here"
+                android:textColor="#3D5AFE"
+                android:textColorHighlight="#000000"
+                android:textColorHint="#000000"
+                android:textColorLink="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:ignore="Deprecated,TouchTargetSizeCheck" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/main_layout1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:scrollIndicators="none"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:id="@+id/logo_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="320dp"
+                android:layout_height="270dp"
+                android:layout_margin="20px"
+                android:background="@color/white"
+                android:contentDescription="@string/vertex"
+                android:scaleType="fitXY"
+                android:src="@drawable/ivon"
+                tools:ignore="PxUsage,ImageContrastCheck" />
+
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                tools:ignore="PxUsage" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/verify_layout"
+        android:layout_width="409dp"
+        android:layout_height="912dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextSizeCheck">
+
+        <TextView
+            android:id="@+id/Verify_email_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/calistoga"
+            android:gravity="center"
+            android:text="@string/verification_mail_send_to_your_gmail_id_please_verify_to_continue"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/Button_send_verification"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/round_btn"
+            android:fontFamily="@font/calistoga"
+            android:text="@string/send_verification_link_again"
+            android:textColor="#FFFFFF" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/Lo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:duplicateParentState="false"
+            android:editable="false"
+            android:fontFamily="@font/calistoga"
+            android:gravity="center"
+            android:text="If Verified Login Here To Access"
+            android:textColor="#3D5AFE"
+            android:textColorHighlight="#000000"
+            android:textColorHint="#000000"
+            android:textColorLink="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:ignore="Deprecated,TouchTargetSizeCheck" />
+
+        <EditText
+            android:id="@+id/Email_change_text_b0x"
+            android:layout_width="match_parent"
+            android:layout_height="150px"
+            android:layout_margin="10px"
+            android:layout_marginBottom="5px"
+            android:autoText="false"
+            android:autofillHints=""
+            android:ems="10"
+            android:fontFamily="@font/calistoga"
+            android:gravity="left"
+            android:hint="Enter Gmail Id To Change"
+            android:inputType="textPassword"
+            android:padding="5px"
+            android:password="true"
+            android:selectAllOnFocus="false"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:ignore="Deprecated,HardcodedText,PxUsage,RtlHardcoded,TextFields" />
+
+        <Button
+            android:id="@+id/Gmail_change"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/calistoga"
+            android:text="Change_Gmail"
+            android:textColor="#FFFFFF"
+            android:visibility="gone"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

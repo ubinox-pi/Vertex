@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Vertex</string>
+    <string name="already_registerd_login_here">Already Registerd? Login Here</string>
+    <string name="new_user_login_here">New User? Login Here</string>
+    <string name="verification_mail_send_to_your_gmail_id_please_verify_to_continue">Verification Mail Send To Your Gmail Id Please Verify To Continue...</string>
+    <string name="send_verification_link">Send Verification Link</string>
+    <string name="change_email">Change Email</string>
+    <string name="resend_otp">Resend Otp</string>
+    <string name="change_gmail" />
+    <string name="send_verification_link_again">Send Verification Link Again</string>
+    <string name="admob_app_id">ca-app-pub-6248894186487666~3652879288</string>
+    <string name="vertex">Vertex</string>
+
+</resources>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Video_task">
+
+    <LinearLayout
+        android:layout_width="409dp"
+        android:layout_height="912dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/calistoga"
+            android:gravity="center"
+            android:text="Watch Video"
+            android:textColor="#000000"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/Task1"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/round_btn"
+                android:fontFamily="@font/calistoga"
+                android:text="Task 1"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/task2"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/round_btn"
+                android:fontFamily="@font/calistoga"
+                android:text="Task 2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/Task3"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_btn"
+                android:fontFamily="@font/calistoga"
+                android:text="Task 3"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="25dp"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/task4"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_btn"
+                android:fontFamily="@font/calistoga"
+                android:text="Task 4"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/Task5"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/round_btn"
+                android:fontFamily="@font/calistoga"
+                android:text="Task 5"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/task6"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/round_btn"
+                android:fontFamily="@font/calistoga"
+                android:text="Task 6"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/Task7"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_btn"
+                android:fontFamily="@font/calistoga"
+                android:text="Task 7"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="25dp"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/task8"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_btn"
+                android:fontFamily="@font/calistoga"
+                android:text="Task 8"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/Task9"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_btn"
+                android:fontFamily="@font/calistoga"
+                android:text="Task 9"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="25dp"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/task10"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_btn"
+                android:fontFamily="@font/calistoga"
+                android:text="Task 10"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/Final"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/round_btn"
+            android:fontFamily="@font/calistoga"
+            android:text="Final Task"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/calistoga"
+            android:gravity="center"
+            android:text="Note:- Compete All The Task And Watch Full Video. And After Completed All The Task Tap And Final Task And Watch Full Video Then Click On That Video To Complete Task."
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

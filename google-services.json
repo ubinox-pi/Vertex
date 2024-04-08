@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "438477911717",
+    "firebase_url": "https://doge-69ff5.firebaseio.com",
+    "project_id": "doge-69ff5",
+    "storage_bucket": "doge-69ff5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438477911717:android:02138886a55363a479ff4c",
+        "android_client_info": {
+          "package_name": "com.vertex.io"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "438477911717-5lt4235k6aod97dprc742a42tbrnj1g5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vertex.io",
+            "certificate_hash": "df5bbfa99022bd3c77d3b8266c0dcfd32fe4e1b8"
+          }
+        },
+        {
+          "client_id": "438477911717-7082crpi37g70ku9uk30jhir81ekgq0a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGj7JsWquesGD5gB6tGSJ4FPuUQyxR8OM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "438477911717-7082crpi37g70ku9uk30jhir81ekgq0a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
