@@ -8,17 +8,31 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.PersistableBundle;
+import android.text.Editable;
+import android.text.Layout;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
@@ -36,9 +50,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Timer;
 
 public class Home extends AppCompatActivity {
 
@@ -48,12 +65,43 @@ public class Home extends AppCompatActivity {
     private RewardedAd rewardedAd;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Context context2 = this;
         Activity activity = this;
+
+        TextView em = findViewById(R.id.Gmail_textview);
+        LottieAnimationView animationView = findViewById(R.id.animationView);
+        ScrollView scrollView = findViewById(R.id.scroll);
+
+        em.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not required for this purpose
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String text = s.toString().trim();
+                if (!text.isEmpty()) {
+                    scrollView.setVisibility(View.VISIBLE);
+                    animationView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        if (em.getText().toString().isEmpty()) {
+            animationView.setVisibility(View.VISIBLE);
+        } else {
+            animationView.setVisibility(View.GONE);
+        }
 
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -139,6 +187,11 @@ public class Home extends AppCompatActivity {
                 builder.create().show();
             }
         });
+        ImageView scratch = findViewById(R.id.Scratch);
+        scratch.setOnClickListener(v -> {
+            Intent intent = new Intent(Home.this, Scratch.class);
+            startActivity(intent);
+        });
 
         ImageView Task = findViewById(R.id.Video_task);
         Task.setOnClickListener(v -> {
@@ -183,47 +236,63 @@ public class Home extends AppCompatActivity {
         });
 
 
+        ImageView withdraw = findViewById(R.id.Withdraw);
+        withdraw.setOnClickListener(v -> {
+            Intent intent = new Intent(this, com.vertex.io.Withdraw.class);
+            startActivity(intent);
+        });
+
         ImageView Daily = findViewById(R.id.Daily_img);
         Date today = new Date();
         String todayStr = new SimpleDateFormat("yyyy-MM-dd").format(today);
         Daily.setOnClickListener(v -> {
             adRewd();
+
             User.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String date = snapshot.child("date").getValue(String.class);
-                    if (date.equals(todayStr)) {
-                        Toast.makeText(context, "You Already Checked In Today", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-
-                        if (rewardedAd != null) {
-                            Toast.makeText(context,"Watch Full Ad TO Earn Reward",Toast.LENGTH_LONG).show();
-                            rewardedAd.show((Activity) context, new OnUserEarnedRewardListener() {
-                                @Override
-                                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-                                    long c = (long) snapshot.child("coin").getValue();
-                                    User.child("coin").setValue((c + 1));
-                                    User.child("date").setValue(todayStr);
-                                    Toast.makeText(context, "Daily Check In Successful", Toast.LENGTH_LONG).show();
-                                    Log.d(TAG, "You earned the reward.");
-                                }
-                            });
+                    if (!snapshot.child("date").exists()) {
+                        User.child("date").setValue(todayStr);
+                    } else {
+                        String date = snapshot.child("date").getValue(String.class);
+                        if (date != null && date.equals(todayStr)) {
+                            Toast.makeText(context, "You Already Checked In Today", Toast.LENGTH_LONG).show();
+                        } else {
+                            if (rewardedAd != null) {
+                                Toast.makeText(context, "Watch Full Ad TO Earn Reward", Toast.LENGTH_LONG).show();
+                                rewardedAd.show((Activity) context, rewardItem -> {
+                                    if (rewardItem != null) {
+                                        double c = snapshot.child("coin").getValue(double.class);
+                                        User.child("coin").setValue(c + 1).addOnSuccessListener(aVoid -> {
+                                            User.child("date").setValue(todayStr).addOnSuccessListener(aVoid2 -> {
+                                                Toast.makeText(context, "Daily Check In Successful", Toast.LENGTH_LONG).show();
+                                                Log.d(TAG, "You earned the reward.");
+                                            }).addOnFailureListener(e -> {
+                                                Toast.makeText(context, "Failed to update check-in date.", Toast.LENGTH_SHORT).show();
+                                                Log.e(TAG, "Failed to update check-in date.", e);
+                                            });
+                                        }).addOnFailureListener(e -> {
+                                            Toast.makeText(context, "Failed to update coins.", Toast.LENGTH_SHORT).show();
+                                            Log.e(TAG, "Failed to update coins.", e);
+                                        });
+                                    } else {
+                                        Toast.makeText(context, "Reward not Available.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                Log.d(TAG, "The rewarded ad wasn't ready yet.");
+                            }
                         }
-                        else
-                        {
-                            Log.d(TAG, "The rewarded ad wasn't ready yet.");
-                        }
                     }
-
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    Log.e(TAG, "Database error: " + error.getMessage());
                 }
             });
         });
+
 
         ImageView dev = findViewById(R.id.Contact_dev);
         dev.setOnClickListener(v -> {
@@ -239,7 +308,29 @@ public class Home extends AppCompatActivity {
 
     }
 
-    private Context context = this;
+
+    public boolean isConnectedToInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
+    }
+
+    Handler handler = new Handler();
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            checkInternetConnection();
+            handler.postDelayed(this, 5000);
+        }
+    };
+
+    private void checkInternetConnection() {
+        if (!isConnectedToInternet()) {
+            Intent intent = new  Intent(Home.this, No_Internet.class);
+        }
+    }
+
+    private final Context context = this;
 
     public void adRewd(){
         AdRequest req = new AdRequest.Builder().build();
@@ -281,5 +372,61 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            try {
+                Class<?> connectivityServiceClass = Class.forName("android.net.ConnectivityManager");
+                Method getActiveNetworkInfo = connectivityServiceClass.getMethod("getActiveNetworkInfo");
+                Object networkInfo = getActiveNetworkInfo.invoke(getSystemService(ConnectivityManager.class));
+
+                if (networkInfo != null) {
+                    Class<?> networkInfoClass = networkInfo.getClass();
+                    Field extraInfoField = networkInfoClass.getDeclaredField("extraInfo");
+                    extraInfoField.setAccessible(true);
+                    String extraInfo = (String) extraInfoField.get(networkInfo);
+
+                    if (extraInfo != null && extraInfo.contains("private")) {
+                        // Private DNS is set, we cannot directly determine the server
+                        showDnsStatus("Private DNS in use");
+                    } else {
+                        // Likely using the provider's DNS server (no private DNS set)
+                        showDnsStatus("Using provider's DNS");
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Handle exceptions gracefully (e.g., reflection errors)
+            }
+        } else {
+            // For devices below Android 9, DNS check is not possible using built-in APIs
+            showDnsStatus("DNS check not available on this device version");
+        }
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            Network activeNetwork = connectivityManager.getActiveNetwork();
+            if (activeNetwork != null) {
+                NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
+                if (networkCapabilities != null && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    showVpnStatus("VPN is connected");
+                } else {
+                    showVpnStatus("VPN is not connected");
+                }
+            } else {
+                showVpnStatus("No active network connection");
+            }
+        } else {
+            showVpnStatus("ConnectivityManager is not available");
+        }
+    }
+
+    private void showDnsStatus(String message) {
+        // Update UI to display DNS status (e.g., Toast message, TextView)
+        Toast.makeText(this, "DNS: " + message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showVpnStatus(String message) {
+        // Update UI to display VPN status (e.g., Toast message, TextView)
+        Toast.makeText(this, "VPN: " + message, Toast.LENGTH_SHORT).show();
     }
 }

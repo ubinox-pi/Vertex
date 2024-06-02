@@ -20,9 +20,14 @@
         android:theme="@style/Theme.Vertex"
         tools:targetApi="31">
         <activity
+            android:name=".Withdraw"
+            android:exported="false" />
+        <activity
+            android:name=".Scratch"
+            android:exported="false" />
+        <activity
             android:name=".Spin"
             android:exported="false" />
-
         <activity
             android:name=".No_Internet"
             android:exported="false" />

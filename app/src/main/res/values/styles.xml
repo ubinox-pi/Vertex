@@ -5,4 +5,5 @@
     <style name="Widget.Theme.Vertex.MyView" parent="">
         <item name="android:background">@color/gray_400</item>
         <item name="exampleColor">@color/light_blue_400</item>
-    </style></resources>
+    </style>
+</resources>

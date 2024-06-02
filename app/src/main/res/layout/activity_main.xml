@@ -63,7 +63,6 @@
                 android:layout_margin="10px"
                 android:layout_marginBottom="5px"
                 android:autofillHints="Enter Email"
-                android:background="@drawable/textview_border"
                 android:ems="10"
                 android:fontFamily="@font/calistoga"
                 android:gravity="left"
@@ -79,7 +78,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:visibility="visible"
-                tools:ignore="HardcodedText,LabelFor,PxUsage,RtlHardcoded"
+                tools:ignore="HardcodedText,PxUsage,RtlHardcoded"
                 tools:visibility="visible" />
 
             <EditText
@@ -90,7 +89,6 @@
                 android:layout_marginBottom="5px"
                 android:autoText="false"
                 android:autofillHints=""
-                android:background="@drawable/textview_border"
                 android:ems="10"
                 android:fontFamily="@font/calistoga"
                 android:gravity="left"
@@ -111,7 +109,7 @@
             <Button
                 android:id="@+id/button_login"
                 android:layout_width="200dp"
-                android:layout_height="150px"
+                android:layout_height="wrap_content"
                 android:layout_margin="10px"
                 android:autoLink="all"
                 android:background="@drawable/round_btn"
@@ -496,7 +494,7 @@
                 android:background="@color/white"
                 android:contentDescription="@string/vertex"
                 android:scaleType="fitXY"
-                android:src="@drawable/ivon"
+                android:src="@drawable/img"
                 tools:ignore="PxUsage,ImageContrastCheck" />
 
             <ProgressBar
