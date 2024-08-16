@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
+    id("org.jetbrains.kotlin.android")
 }
 
 android {
@@ -15,6 +16,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags += ""
+            }
+        }
     }
 
     buildTypes {
@@ -32,24 +38,51 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     buildToolsVersion = "34.0.0"
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
+
+
 
 dependencies {
 
     implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation ("com.github.ybq:Android-SpinKit:1.4.0")
     implementation("com.google.android.material:material:1.12.0")
+    implementation ("com.basgeekball:awesome-validation:4.3")
+    implementation ("io.github.otpless-tech:otpless-android-sdk:2.4.0")
+    implementation ("androidx.core:core:1.13.1")
+    implementation ("androidx.core:core-ktx:1.13.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.firebase:firebase-database:21.0.0")
     implementation("com.google.firebase:firebase-inappmessaging-display:21.0.0")
     implementation("com.google.firebase:firebase-auth:23.0.0")
-    implementation("com.google.android.gms:play-services-ads:23.1.0")
-    implementation("com.google.android.gms:play-services-ads-lite:23.1.0")
+    implementation("com.google.android.gms:play-services-ads:23.3.0")
+    implementation ("com.google.android.gms:play-services-ads:21.3.0")
+    implementation("com.google.android.gms:play-services-ads-lite:23.3.0")
     implementation ("com.airbnb.android:lottie:3.4.0")
-    implementation("androidx.activity:activity:1.9.0")
+    implementation("androidx.activity:activity-ktx:1.9.1")
+    implementation("androidx.activity:activity:1.9.1")
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.compose.animation:animation-android:1.6.8")
+    implementation("androidx.compose.foundation:foundation-android:1.6.8")
+    implementation("androidx.compose.material3:material3-android:1.2.1")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     implementation("com.onesignal:OneSignal:5.1.13")
     implementation ("com.google.android.recaptcha:recaptcha:18.5.1")
     implementation ("org.imaginativeworld.oopsnointernet:oopsnointernet:2.0.0")
+    implementation ("com.github.Drjacky:ImagePicker:2.3.22")
+    implementation ("androidx.appcompat:appcompat:1.7.0")
+    implementation ("androidx.cardview:cardview:1.0.0")
+    implementation ("com.google.firebase:firebase-storage:21.0.0")
+    implementation ("com.github.bumptech.glide:glide:4.13.2")
 }

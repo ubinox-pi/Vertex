@@ -2,12 +2,15 @@ package com.vertex.io;
 
 import static android.content.ContentValues.TAG;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -16,33 +19,34 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
+import android.provider.Settings;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,11 +55,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Timer;
+
 
 public class Home extends AppCompatActivity {
 
@@ -63,19 +66,65 @@ public class Home extends AppCompatActivity {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private AdView mAdView;
     private RewardedAd rewardedAd;
+    Activity activity;
+    private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
 
+    private void showPermissionDeniedDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Permission Required")
+                .setMessage("This permission is necessary to receive notifications. Please grant the permission to continue.")
+                .setPositiveButton("Request Permission", (dialog, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                })
+                .setCancelable(false)
+                .create()
+                .show();
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission was granted
+                // Your code for handling notifications goes here
+            } else {
+            }
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Context context2 = this;
-        Activity activity = this;
-
         TextView em = findViewById(R.id.Gmail_textview);
         LottieAnimationView animationView = findViewById(R.id.animationView);
         ScrollView scrollView = findViewById(R.id.scroll);
+
+        // Todo: implement in mainActivity
+
+//        Otp otp = new Otp(context,"9801112671");
+//        otp.setCancelable(false);
+//        otp.getWindow().setBackgroundDrawable(getDrawable(R.drawable.otp));
+//        otp.getWindow().setWindowAnimations(R.style.DialogAnimation);
+//        otp.getWindow().setGravity(Gravity.BOTTOM);
+//        otp.create();
+//        otp.show();
+
+
+
+
+        ImageView math = findViewById(R.id.Math);
+        math.setOnClickListener(v -> {
+            Intent intent = new Intent(Home.this, Math.class);
+            startActivity(intent);
+        });
 
         em.addTextChangedListener(new TextWatcher() {
             @Override
@@ -118,7 +167,7 @@ public class Home extends AppCompatActivity {
         mAdView.loadAd(adRequest);
 
 
-        TextView Points = findViewById(R.id.Point_textview);
+        TextView Points = findViewById(R.id.point);
         String UID = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
         DatabaseReference User = FirebaseDatabase.getInstance().getReference("Users").child(UID);
         User.addValueEventListener(new ValueEventListener() {
@@ -133,6 +182,31 @@ public class Home extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+        });
+
+        LinearLayout Profile = findViewById(R.id.nav_profile);
+        LinearLayout wallet = findViewById(R.id.nav_wallet);
+        LinearLayout privacy = findViewById(R.id.nav_privacy_policy);
+        LinearLayout terms_and_condition = findViewById(R.id.nav_terms_and_condition);
+        LinearLayout about_us = findViewById(R.id.nav_about_us);
+        LinearLayout contact_us = findViewById(R.id.nav_contact_us);
+        LinearLayout faqs = findViewById(R.id.nav_faq);
+
+        Profile.setOnClickListener(v ->{
+            Intent intent = new Intent(Home.this, Profile.class);
+            startActivity(intent);
+        });
+        wallet.setOnClickListener(v ->{
+            Intent intent = new Intent(Home.this, Withdraw.class);
+            startActivity(intent);
+        });
+
+
+        DrawerLayout drawerLayout = findViewById(R.id.drawer);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        androidx.appcompat.widget.Toolbar actionBar = findViewById(R.id.home_action);
+        actionBar.setNavigationOnClickListener(v -> {
+            drawerLayout.openDrawer(navigationView);
         });
 
         ImageView profile = findViewById(R.id.Profile_view);
@@ -351,6 +425,8 @@ public class Home extends AppCompatActivity {
     }
 
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -373,34 +449,50 @@ public class Home extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+                showPermissionDeniedDialog();
+            }
+                }
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             try {
-                Class<?> connectivityServiceClass = Class.forName("android.net.ConnectivityManager");
-                Method getActiveNetworkInfo = connectivityServiceClass.getMethod("getActiveNetworkInfo");
-                Object networkInfo = getActiveNetworkInfo.invoke(getSystemService(ConnectivityManager.class));
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                if (connectivityManager != null) {
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                    if (networkInfo != null) {
+                        Class<?> networkInfoClass = networkInfo.getClass();
+                        Field extraInfoField = networkInfoClass.getDeclaredField("extraInfo");
+                        extraInfoField.setAccessible(true);
+                        String extraInfo = (String) extraInfoField.get(networkInfo);
 
-                if (networkInfo != null) {
-                    Class<?> networkInfoClass = networkInfo.getClass();
-                    Field extraInfoField = networkInfoClass.getDeclaredField("extraInfo");
-                    extraInfoField.setAccessible(true);
-                    String extraInfo = (String) extraInfoField.get(networkInfo);
-
-                    if (extraInfo != null && extraInfo.contains("private")) {
-                        // Private DNS is set, we cannot directly determine the server
-                        showDnsStatus("Private DNS in use");
+                        if (extraInfo != null && extraInfo.contains("private")) {
+                            // Private DNS is set, we cannot directly determine the server
+                            showDnsStatus("Private DNS in use");
+                        } else {
+                            // Likely using the provider's DNS server (no private DNS set)
+                            showDnsStatus("Using provider's DNS");
+                        }
                     } else {
-                        // Likely using the provider's DNS server (no private DNS set)
-                        showDnsStatus("Using provider's DNS");
+                        showDnsStatus("No active network connection");
                     }
+                } else {
+                    showDnsStatus("ConnectivityManager not available");
                 }
-            } catch (Exception e) {
+            } catch (IllegalAccessException |
+                     NoSuchFieldException e) {
                 e.printStackTrace();
                 // Handle exceptions gracefully (e.g., reflection errors)
+                showDnsStatus("Error determining DNS status");
             }
         } else {
             // For devices below Android 9, DNS check is not possible using built-in APIs
             showDnsStatus("DNS check not available on this device version");
         }
+
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {

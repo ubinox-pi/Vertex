@@ -3,7 +3,7 @@ package com.vertex.io;
 public class withdraw_class {
     private String id;
     private String upiId;
-    private double amount;
+    private String amount;
     private String status;
     private String date;
     private String txnId;
@@ -12,7 +12,7 @@ public class withdraw_class {
         // Default constructor required for calls to DataSnapshot.getValue(Withdrawal.class)
     }
 
-    public withdraw_class(String id, String upiId, double amount, String status, String txnId, String date) {
+    public withdraw_class(String id, String upiId, String amount, String status, String txnId, String date) {
         this.id = id;
         this.upiId = upiId;
         this.amount = amount;
@@ -29,7 +29,7 @@ public class withdraw_class {
         return upiId;
     }
 
-    public double getAmount() {
+    public String getAmount() {
         return amount;
     }
 

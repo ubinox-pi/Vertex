@@ -11,5 +11,9 @@
     <string name="admob_app_id">ca-app-pub-6248894186487666~3652879288</string>
     <string name="vertex">Vertex</string>
     <string name="scratch_to_see_your_prize">Scratch to see your prize!</string>
+    <string name="err_email">Invalid Email Address</string>
+    <string name="err_password">Password must be at least 6 characters</string>
+    <string name="Textbox_must_not_be_empty">Textbox must not be empty</string>
+    <string name="err_custom">Custom validation failed</string>
 
 </resources>

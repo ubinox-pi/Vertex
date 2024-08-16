@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    android:padding="0dp"
+    android:background="@color/app_theme"
+    app:navigationIcon="@drawable/menu"
+    android:gravity="center|top">
+
+<!--    <ImageView-->
+<!--        android:id="@+id/menu"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/menu"/>-->
+
+
+        <LinearLayout
+            android:id="@+id/Home_upp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/app_theme"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/App_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/calistoga"
+                android:gravity="center|top"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:text="Vertex"
+                android:textColor="@color/secondary_text"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/points_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="0dp"
+                    android:textSize="25sp"
+                    android:text="₹"
+                    android:textColor="@color/secondary_text"/>
+
+                <TextView
+                    android:id="@+id/point"
+                    android:layout_width="75dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/calistoga"
+                    android:gravity="center|left"
+                    android:text="0"
+                    android:textColor="@color/secondary_text"
+                    android:textColorHighlight="#000000"
+                    android:textColorHint="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+</androidx.appcompat.widget.Toolbar>

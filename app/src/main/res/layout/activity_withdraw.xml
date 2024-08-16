@@ -108,7 +108,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/calistoga"
                 android:hint="Enter amount"
-                android:inputType="numberDecimal" />
+                android:inputType="number" />
 
             <Button
                 android:id="@+id/withdrawButton"

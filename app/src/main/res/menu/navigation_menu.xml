@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item android:id="@+id/nav_wallet"
+            android:title="MY WALLET"
+            android:icon="@drawable/wallet" />
+
+        <item
+            android:id="@+id/nav_privacy_policy"
+            android:title="PRIVACY POLICY"
+            android:icon="@drawable/privacy_policy" />
+
+        <item
+            android:id="@+id/nav_terms_and_condition"
+            android:title="TERMS AND CONDITION"
+            android:icon="@drawable/terms_and_conditions" />
+
+        <item android:id="@+id/nav_about_us"
+            android:title="ABOUT US"
+            android:icon="@drawable/about_us" />
+
+        <item android:id="@+id/nav_contact_us"
+            android:title="CONTACT US"
+            android:icon="@drawable/contact_us" />
+
+        <item android:id="@+id/nav_faq"
+            android:title="FAQs"
+            android:icon="@drawable/question" />
+
+    </group>
+
+</menu>

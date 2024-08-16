@@ -50,7 +50,7 @@ public class withdrawal_list extends ArrayAdapter<withdraw_class> {
         withdrawalAmount.setText("Amount: $" + withdrawal.getAmount());
         withdrawalStatus.setText("Status: " + withdrawal.getStatus());
         withdrawalTxnId.setText("Txn ID: " + withdrawal.getTxnId());
-        withdrawalTxnId.setText("Date: " + withdrawal.getDate());
+        withdrawalDate.setText("Date: " + withdrawal.getDate());
 
         return convertView;
     }

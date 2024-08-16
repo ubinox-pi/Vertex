@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.lang.Math;
+
 
 public class Withdraw extends AppCompatActivity {
     @Override
@@ -64,7 +66,7 @@ public class Withdraw extends AppCompatActivity {
         ListAdapter withdraw_class = new withdrawal_list(this, withdrawals);
         withdrawallist.setAdapter(withdraw_class);
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("withdrawals");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(UID).child("withdrawals");
 
 
         DatabaseReference databaseReferences = FirebaseDatabase.getInstance().getReference(UID).child("withdrwals");
@@ -81,7 +83,7 @@ public class Withdraw extends AppCompatActivity {
                         withdraw_class withdrawal = snapshot.getValue(withdraw_class.class);
                         withdrawals.add(withdrawal);
                     }
-//                withdrawal_list.notifyDataSetChanged();
+//                    withdrawal_list.notifyDataSetChanged();
                     his.setVisibility(View.GONE);
                     withdrawallist.setVisibility(View.VISIBLE);
                 }
@@ -104,7 +106,7 @@ public class Withdraw extends AppCompatActivity {
         EditText amount = findViewById(R.id.withdrawAmount);
         DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(UID).child("coin");
         DatabaseReference User_withdrawal = FirebaseDatabase.getInstance().getReference("Users").child(UID).child("withdrawals");
-        DatabaseReference withdrawal_all = FirebaseDatabase.getInstance().getReference("withdrawals");
+        DatabaseReference withdrawal_all = FirebaseDatabase.getInstance().getReference("All_withdrawals");
 
         with.setOnClickListener(v ->{
             if (!upi.getText().toString().isEmpty() && upi.getText().toString().length() <= 20 && upi.getText().toString().contains("@"))
@@ -123,30 +125,61 @@ public class Withdraw extends AppCompatActivity {
                                 String Txn_id = generateRandomId();
                                 if (coin >= Double.parseDouble(amount.getText().toString()))
                                 {
-                                    Toast.makeText(Withdraw.this, "Wait Withdrawal is in progress", Toast.LENGTH_LONG).show();
-                                    HashMap<String, Object> transactionDetails = new HashMap<>();
-                                    transactionDetails.put("id", UID);
-                                    transactionDetails.put("upiId", upi.getText().toString().trim());
-                                    transactionDetails.put("amount", amount.getText().toString().toString());
-                                    transactionDetails.put("txnId", Txn_id);
-                                    transactionDetails.put("date", todayStr);
-                                    transactionDetails.put("status", "pending");
-                                    User_withdrawal.child(Txn_id).setValue(transactionDetails).addOnCompleteListener(task ->{
+                                    with.setEnabled(false);
+                                    with.setBackgroundResource(R.drawable.round_btn);
+                                    String d = amount.getText().toString();
+                                    double c =  Double.parseDouble(d);
+                                    double b = coin - c;
+                                    user.setValue(b).addOnCompleteListener(task -> {
                                         if (task.isSuccessful())
                                         {
-                                            withdrawal_all.child(Txn_id).setValue(transactionDetails).addOnCompleteListener(task1 -> {
-                                                if (task1.isSuccessful())
+                                            Toast.makeText(Withdraw.this, "Wait Withdrawal is in progress", Toast.LENGTH_LONG).show();
+                                            HashMap<String, Object> transactionDetails = new HashMap<>();
+                                            transactionDetails.put("id", UID);
+                                            transactionDetails.put("upiId", upi.getText().toString().trim());
+                                            transactionDetails.put("amount", amount.getText().toString().toString());
+                                            transactionDetails.put("txnId", Txn_id);
+                                            transactionDetails.put("date", todayStr);
+                                            transactionDetails.put("status", "pending");
+                                            User_withdrawal.child(Txn_id).setValue(transactionDetails).addOnCompleteListener(task2 ->{
+                                                if (task2.isSuccessful())
                                                 {
-                                                    Toast.makeText(Withdraw.this, "Withdrawal Success", Toast.LENGTH_SHORT).show();
+                                                    withdrawal_all.child(Txn_id).setValue(transactionDetails).addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful())
+                                                        {
+                                                            Toast.makeText(Withdraw.this, "Withdrawal Success", Toast.LENGTH_SHORT).show();
+                                                            upi.setText("");
+                                                            amount.setText("");
+                                                        }
+                                                        else
+                                                        {
+                                                            Toast.makeText(Withdraw.this, "Withdrawal Failed", Toast.LENGTH_SHORT).show();
+                                                            with.setEnabled(true);
+                                                            with.setBackgroundResource(R.drawable.round_btn);
+                                                        }
+                                                    });
+                                                }
+                                                else
+                                                {
+                                                    Toast.makeText(Withdraw.this, "Withdrawal Failed", Toast.LENGTH_SHORT).show();
+                                                    with.setEnabled(true);
+                                                    with.setBackgroundResource(R.drawable.round_btn);
                                                 }
                                             });
                                         }
-
+                                        else
+                                        {
+                                            Toast.makeText(Withdraw.this, "Withdrawal Failed", Toast.LENGTH_SHORT).show();
+                                            with.setEnabled(true);
+                                            with.setBackgroundResource(R.drawable.round_btn);
+                                        }
                                     });
                                 }
                                 else
                                 {
                                     Toast.makeText(Withdraw.this, "Insufficient balance", Toast.LENGTH_SHORT).show();
+                                    with.setEnabled(true);
+                                    with.setBackgroundResource(R.drawable.round_btn);
                                 }
 
                             }

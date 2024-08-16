@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +21,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.Wave;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -53,6 +60,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //hideStatusBar();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        ProgressBar progressBar = (ProgressBar)findViewById(R.id.spin_kit);
+        Sprite doubleBounce = new Wave();
+        progressBar.setIndeterminateDrawable(doubleBounce);
+
+        //these are style for custom progress
+//        @style/SpinKitView
+//        @style/SpinKitView.Circle
+//        @style/SpinKitView.Large
+//        @style/SpinKitView.Small
+//        @style/SpinKitView.Small.DoubleBounce
 
 
         Timer timer = new Timer();
@@ -757,17 +778,14 @@ public class MainActivity extends AppCompatActivity {
 
         TextView Ctext = findViewById(R.id.Email_change_text_b0x);
         Button Cbutton = findViewById(R.id.Gmail_change);
-        Cbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Ctext.getText() == null && Ctext.getText().toString().contains("@gmail.com"))
-                {
-                    Toast.makeText(MainActivity.this,"Enter Correct Gmail Id",Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(MainActivity.this,"Enter Correct Gmail Id",Toast.LENGTH_SHORT).show();
-                }
+        Cbutton.setOnClickListener(v -> {
+            if (Ctext.getText() == null && Ctext.getText().toString().contains("@gmail.com"))
+            {
+                Toast.makeText(MainActivity.this,"Enter Correct Gmail Id",Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(MainActivity.this,"Enter Correct Gmail Id",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -779,5 +797,23 @@ public class MainActivity extends AppCompatActivity {
             sendOtp(Phone,true);
             Toast.makeText(MainActivity.this,"Otp Resend",Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void textStyle()
+    {
+        AwesomeValidation awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
+
+        AwesomeValidation awesomeValidation_color = new AwesomeValidation(ValidationStyle.COLORATION);
+        awesomeValidation_color.setColor(Color.YELLOW); // Set the color for validation
+
+        AwesomeValidation awesomeValidation_underline = new AwesomeValidation(ValidationStyle.UNDERLABEL);
+        awesomeValidation_underline.setContext(this); // Set the context for validation
+    }
+
+    private void hideStatusBar() {
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        uiOptions = uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
     }
 }

@@ -2,9 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="secondry_bg">#424242</color>
     <color name="app_theme">#d91b30</color>
+    <color name="primary_text">#FFBDBDBD</color>
+    <color name="secondary_text">#FFFFFFFF</color>
     <color name="light_blue_400">#FF29B6F6</color>
     <color name="light_blue_600">#FF039BE5</color>
+    <color name="progress">#287CFC</color>
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
+    <color name="nav">#a1a5ac</color>
 </resources>
