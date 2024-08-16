@@ -671,11 +671,12 @@
         app:lottie_rawRes="@raw/loadingg" />
 
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
         android:layout_width="325dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:id="@+id/navigation_view">
-        <include
-            layout="@layout/custom_nav"/>
+        android:visibility="gone">
+
+        <include layout="@layout/custom_nav" />
     </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>
