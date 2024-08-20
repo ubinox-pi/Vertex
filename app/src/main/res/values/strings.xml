@@ -15,5 +15,7 @@
     <string name="err_password">Password must be at least 6 characters</string>
     <string name="Textbox_must_not_be_empty">Textbox must not be empty</string>
     <string name="err_custom">Custom validation failed</string>
+    <string name="open">Open Navigation Drawer</string>
+    <string name="close">Close Navigation Drawer</string>
 
 </resources>

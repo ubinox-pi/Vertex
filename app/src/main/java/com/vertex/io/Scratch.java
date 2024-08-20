@@ -104,6 +104,10 @@ public class Scratch extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scratch);
 
+        androidx.appcompat.widget.Toolbar actionBar = findViewById(R.id.action);
+        actionBar.setNavigationIcon(ContextCompat.getDrawable(Scratch.this,R.drawable.arrow_back));
+        actionBar.setNavigationOnClickListener(v -> finish());
+
         popDialog = new pop_dialog(context);
         loading();
 
@@ -271,9 +275,6 @@ public class Scratch extends AppCompatActivity {
                 int coin = snapshot.getValue(Integer.class);
                 String string = String.valueOf(coin);
                 point.setText(String.valueOf(coin));
-                androidx.appcompat.widget.Toolbar actionBar = findViewById(R.id.action);
-                actionBar.setNavigationIcon(ContextCompat.getDrawable(Scratch.this,R.drawable.arrow_back));
-                actionBar.setNavigationOnClickListener(v -> finish());
             }
 
             @Override

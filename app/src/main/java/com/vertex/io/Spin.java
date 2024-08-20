@@ -1,12 +1,7 @@
 package com.vertex.io;
 
-import static android.graphics.Color.rgb;
-
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -15,15 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,25 +21,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.Math;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Random;
-import java.lang.Math;
 
 
 public class Spin extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_spin);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        displayPoints();
+        androidx.appcompat.widget.Toolbar actionBar = findViewById(R.id.action);
+        actionBar.setNavigationIcon(ContextCompat.getDrawable(Spin.this,R.drawable.arrow_back));
+        actionBar.setNavigationOnClickListener(v -> finish());
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String UID = mAuth.getCurrentUser().getUid().toString();
@@ -550,5 +540,27 @@ public class Spin extends AppCompatActivity {
         imageView.startAnimation(animation);
     }
 
+
+    void displayPoints()
+    {
+        FirebaseDatabase DB = FirebaseDatabase.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String UID = mAuth.getCurrentUser().getUid().toString();
+        DatabaseReference Point = DB.getReference("Users").child(UID).child("coin");
+        TextView point = findViewById(R.id.point);
+        Point.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int coin = snapshot.getValue(Integer.class);
+                String string = String.valueOf(coin);
+                point.setText(String.valueOf(coin));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("", "Failed to read value.", error.toException());
+            }
+        });
+    }
 
 }

@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".Spin">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="3dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">>
+        android:visibility="visible">
+
+        <include
+            android:id="@+id/action"
+            layout="@layout/action_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
         <LinearLayout
             android:id="@+id/Home_upp"
@@ -27,7 +31,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="4dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/imageView"
@@ -82,17 +86,35 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="7dp"
-            android:background="@drawable/home"
+            android:background="@drawable/bg_app"
             android:gravity="center"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/calistoga"
+                    android:gravity="center"
+                    android:text="Spin The Wheel"
+                    android:textColor="@color/primary_text"
+                    android:textSize="34sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/imageView4"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:rotation="90"
-                app:srcCompat="@drawable/arroe" />
+                app:srcCompat="@drawable/arrow" />
 
             <ImageView
                 android:id="@+id/Image_spin"
@@ -106,6 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/round_btn"
+                android:textColor="@color/secondary_text"
                 android:fontFamily="@font/calistoga"
                 android:text="Spin"
                 android:textStyle="bold" />
@@ -124,7 +147,7 @@
                     android:layout_marginRight="5dp"
                     android:fontFamily="@font/calistoga"
                     android:text="Today Spins Left"
-                    android:textColor="#000000"
+                    android:textColor="@color/secondary_text"
                     android:textStyle="bold" />
 
                 <TextView
@@ -134,11 +157,17 @@
                     android:layout_marginRight="5dp"
                     android:fontFamily="@font/calistoga"
                     android:text="0"
-                    android:textColor="#000000"
+                    android:textColor="@color/secondary_text"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
         </LinearLayout>
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

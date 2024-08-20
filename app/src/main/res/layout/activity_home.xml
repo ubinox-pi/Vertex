@@ -130,7 +130,7 @@
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="130dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="130dp"
                             android:layout_marginRight="5dp"
                             android:background="@drawable/transparany"
                             app:cardCornerRadius="80dp"
@@ -675,7 +675,7 @@
         android:layout_width="325dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <include layout="@layout/custom_nav" />
     </com.google.android.material.navigation.NavigationView>

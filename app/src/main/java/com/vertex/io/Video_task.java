@@ -7,15 +7,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
@@ -101,14 +99,14 @@ public class Video_task extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_video_task);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
+        displayPoints();
+
+
+        androidx.appcompat.widget.Toolbar actionBar = findViewById(R.id.action);
+        actionBar.setNavigationIcon(ContextCompat.getDrawable(Video_task.this,R.drawable.arrow_back));
+        actionBar.setNavigationOnClickListener(v -> finish());
 
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -1004,6 +1002,28 @@ public class Video_task extends AppCompatActivity {
 
                 }
             });
+        });
+    }
+
+    void displayPoints()
+    {
+        FirebaseDatabase DB = FirebaseDatabase.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String UID = mAuth.getCurrentUser().getUid().toString();
+        DatabaseReference Point = DB.getReference("Users").child(UID).child("coin");
+        TextView point = findViewById(R.id.point);
+        Point.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int coin = snapshot.getValue(Integer.class);
+                String string = String.valueOf(coin);
+                point.setText(String.valueOf(coin));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "Failed to read value.", error.toException());
+            }
         });
     }
 }

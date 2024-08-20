@@ -8,7 +8,7 @@
 
 
 
-    <style name="Theme.Vertex" parent="Base.Theme.Vertex">
+    <style name="Theme.Vertex" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:statusBarColor">@color/app_theme</item>
     </style>
     

@@ -3,9 +3,12 @@ package com.vertex.io;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -21,7 +24,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.bumptech.glide.Glide;
 import com.github.drjacky.imagepicker.ImagePicker;
 import com.github.drjacky.imagepicker.constant.ImageProvider;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -48,12 +50,13 @@ import kotlin.jvm.internal.Intrinsics;
 
 public class Profile extends AppCompatActivity {
 
+    pop_dialog popDialog ;
+
     ActivityResultLauncher<Intent> launcher=
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),(ActivityResult result)->{
                 if(result.getResultCode()==RESULT_OK){
                     Uri uri=result.getData().getData();
                     Toast.makeText(this, "Please Wait", Toast.LENGTH_LONG).show();
-
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     String UID = mAuth.getCurrentUser().getUid().toString();
                     String imageFileName = "image_"+UID+".jpg";
@@ -67,11 +70,26 @@ public class Profile extends AppCompatActivity {
                             Users.child("Url").setValue(url).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
+                                    ImageView profile_img = findViewById(R.id.Profile);
+                                    File directory = Profile.this.getFilesDir();
+                                    File local = new File(directory,"imageFile");
+                                    String imageFileName = "image_"+UID+".jpg";
+                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                                    StorageReference storageRef = storage.getReference().child(imageFileName);
+                                    storageRef.getFile(local).addOnSuccessListener(v ->{
+                                        File imageFile = local;
+                                        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                                        profile_img.setImageBitmap(bitmap);
+                                        loading_cancel();
+                                    }).addOnFailureListener( v -> {
+                                        Toast.makeText(Profile.this,v.getMessage(),Toast.LENGTH_SHORT).show();
+                                    });
                                     Toast.makeText(Profile.this, "Profile Updated", Toast.LENGTH_SHORT).show();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
+                                    loading_cancel();
                                     Toast.makeText(Profile.this, "Profile Not Updated", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -79,14 +97,17 @@ public class Profile extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            loading_cancel();
                             Toast.makeText(Profile.this, "Profile Not Updated", Toast.LENGTH_SHORT).show();
                         }
                     });
 
 
                 }else if(result.getResultCode()==ImagePicker.RESULT_ERROR){
+                    loading_cancel();
                     Toast.makeText(this, ImagePicker.Companion.getError(result.getData()), Toast.LENGTH_SHORT).show();
                 }else{
+                    loading_cancel();
                     Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -105,6 +126,7 @@ public class Profile extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        popDialog = new pop_dialog(this);
 
         ImageView profile = findViewById(R.id.Profile);
         profile.setOnClickListener(v -> {
@@ -121,6 +143,7 @@ public class Profile extends AppCompatActivity {
                         public final void invoke(@NotNull Intent it){
                             Intrinsics.checkNotNullParameter(it,"it");
                             launcher.launch(it);
+                            loading();
                         }
                     }));
         });
@@ -131,41 +154,6 @@ public class Profile extends AppCompatActivity {
         DatabaseReference Users = FirebaseDatabase.getInstance().getReference("Users").child(UID);
 
 
-//        File finalLocalFile1 = getCacheDir();
-//        if(finalLocalFile1.exists() && finalLocalFile1 == null)
-//        {
-//            String img_id = "image_"+UID+".jpg";
-//            StorageReference Image_profile = FirebaseStorage.getInstance().getReference(img_id);
-//            ImageView profile_img = findViewById(R.id.Profile);
-//            localFile = null;
-//            try {
-//                localFile = File.createTempFile("tempImage", "jpg");
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            File finalLocalFile = localFile;
-//            Image_profile.getFile(localFile).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-//                    Bitmap bitmap = BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath());
-//                    profile_img.setImageBitmap(bitmap);
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Toast.makeText(Profile.this, "Unable To Load Profile", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//        else
-//        {
-//            ImageView profile_img = findViewById(R.id.Profile);
-//            File finalLocalFile = localFile;
-//            Bitmap bitmap = BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath());
-//            profile_img.setImageBitmap(bitmap);
-//        }
-
-
 
         @SuppressLint("CutPasteId") ImageView profile_img = findViewById(R.id.Profile);
         Users.child("Url").addValueEventListener(new ValueEventListener() {
@@ -173,10 +161,31 @@ public class Profile extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists())
                 {
-                    String uri = snapshot.getValue(String.class);
-                    Glide.with(Profile.this)
-                            .load(uri)
-                            .into(profile_img);
+                    File directory = Profile.this.getFilesDir();
+                    File local = new File(directory,"imageFile");
+                    String imageFileName = "image_"+UID+".jpg";
+                    try {
+                        if (!local.exists())
+                        {
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference storageRef = storage.getReference().child(imageFileName);
+                            storageRef.getFile(local).addOnSuccessListener(v ->{
+                                File imageFile = local;
+                                Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                                profile_img.setImageBitmap(bitmap);
+                            }).addOnFailureListener( v -> {
+                                Toast.makeText(Profile.this,v.getMessage(),Toast.LENGTH_SHORT).show();
+                            });
+                        } else if (local.exists()) {
+                            File imageFile = local;
+                            Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                            profile_img.setImageBitmap(bitmap);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Toast.makeText(Profile.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
 
@@ -249,5 +258,19 @@ public class Profile extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    public void loading(){
+        popDialog.setCancelable(false);
+        popDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.loading_popup));
+        popDialog.getWindow().setWindowAnimations(R.style.popupAnimation);
+        popDialog.getWindow().setGravity(Gravity.CENTER);
+        popDialog.create();
+        popDialog.show();
+    }
+
+    public void loading_cancel(){
+        popDialog.cancel();
     }
 }

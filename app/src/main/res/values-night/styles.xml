@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="Widget.Theme.Vertex.MyView" parent="">
+    <style name="Widget.Theme.Vertex.MyView" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:background">@color/gray_600</item>
         <item name="exampleColor">@color/light_blue_600</item>
         <item name="android:statusBarColor">@color/app_theme</item>

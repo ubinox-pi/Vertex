@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -53,7 +55,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -231,6 +236,48 @@ public class Home extends AppCompatActivity {
         });
         Context context = this;
 
+        ImageView profile_pic = findViewById(R.id.Profile_pics);
+        User.child("Url").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                {
+                    File directory = Home.this.getFilesDir();
+                    File local = new File(directory,"imageFile");
+                    String imageFileName = "image_"+UID+".jpg";
+                    try {
+                        if (!local.exists())
+                        {
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference storageRef = storage.getReference().child(imageFileName);
+                            storageRef.getFile(local).addOnSuccessListener(v ->{
+                                File imageFile = local;
+                                Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                                profile_pic.setImageBitmap(bitmap);
+                            }).addOnFailureListener( v -> {
+                                Toast.makeText(Home.this,v.getMessage(),Toast.LENGTH_SHORT).show();
+                            });
+                        } else if (local.exists()) {
+                            File imageFile = local;
+                            Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                            profile_pic.setImageBitmap(bitmap);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Toast.makeText(Home.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -449,13 +496,23 @@ public class Home extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        File directory = Home.this.getFilesDir();
+        File local = new File(directory,"imageFile");
+        ImageView profile_pic = findViewById(R.id.Profile_pics);
+        if (local.exists()) {
+            File imageFile = local;
+            Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+            profile_pic.setImageBitmap(bitmap);
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+                }
+            else if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
                 showPermissionDeniedDialog();
             }
-                }
+
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
