@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -21,45 +21,102 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.basgeekball.awesomevalidation.AwesomeValidation;
-import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.Wave;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
-import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.otpless.dto.HeadlessRequest;
+import com.otpless.dto.HeadlessResponse;
+import com.otpless.main.OtplessManager;
+import com.otpless.main.OtplessView;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth mFirebaseAuth;
-    private DatabaseReference dbR,dbR2;
-    String vCode;
-    PhoneAuthProvider.ForceResendingToken FRT = null;
+    FirebaseAuth mFirebaseAuth;
+    FirebaseDatabase mFirebaseDatabase;
+    DatabaseReference mDatabaseReference;
+    DatabaseReference refer;
+    DatabaseReference phoneReference;
 
-    long timeoutSecond = 300L;
+    User_update users;
+
+    MainActivity main = this;
+
+    String OTP;
+
+    String Pnumber;
+    OtplessView otplessView;
+
+    private Otp otp;
+    private pop_dialog popDialog;
+
+    AirtableRecord record;
+    AirtableAPI apiService;
+
+    String uids;
+
+    String Email;
+    String Password;
+    String Phone;
+    String ReferBy;
+    String Name;
+    String Uid;
+    String Date;
+    Double Coin;
+    String Url;
+    String Address;
+
+    JSONObject successResponse1,responseWithToken1;
+
+    HeadlessRequest request;
+
+    boolean numberCheck = false;
+
+    Context context;
+    String BASE_URL = "https://api.airtable.com/v0/appOOtw5HApriW4K8/";
+    
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference("Users");
+        refer = mFirebaseDatabase.getReference("refers");
+        phoneReference = mFirebaseDatabase.getReference("Phones");
+
+
+        ReferBy = "Admin";
+        context = MainActivity.this;
+        popDialog = new pop_dialog(context);
+
+        // Initialize Otpless
+        otplessView = OtplessManager.getInstance().getOtplessView(this);
+        otplessView.initHeadless("9N0B8BKCTZNMZMK8LX5X");
+        otplessView.setHeadlessCallback(this::onHeadlessCallback);
 
         //hideStatusBar();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -108,15 +165,9 @@ public class MainActivity extends AppCompatActivity {
         }, 5000);
 
 //        Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.app_theme)));
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        FirebaseDatabase DB = FirebaseDatabase.getInstance();
-
-        DatabaseReference DBF = FirebaseDatabase.getInstance().getReference("refers");
-
-
         TextView lo = findViewById(R.id.Lo);
         LinearLayout layout_v = findViewById(R.id.verify_layout);
-        LinearLayout layout_l0 = findViewById(R.id.main_layout);
+        LinearLayout layout_l0 = findViewById(R.id.login_layout);
         lo.setOnClickListener(v -> {
             layout_v.setVisibility(View.GONE);
             layout_l0.setVisibility(View.VISIBLE);
@@ -176,11 +227,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /** REGISTRATION **/
 
-
-        Button r = findViewById(R.id.Button_r2);
-        r.setOnClickListener(v -> {
+        Button registration = findViewById(R.id.Button_r2);
+        registration.setOnClickListener(v -> {
             EditText text_e = findViewById(R.id.email_text_box2);
             EditText text_p = findViewById(R.id.phone_text_box);
             EditText text_ps = findViewById(R.id.password_text_box3);
@@ -189,207 +239,57 @@ public class MainActivity extends AppCompatActivity {
             EditText refer = findViewById(R.id.Refer);
             LinearLayout layout_reg = findViewById(R.id.Register_layout);
 
-            if (!name.getText().toString().isEmpty())
+            if (!name.getText().toString().isEmpty() && name.getText().toString().length()>2 && name.getText().toString().length()<30 && name.getText().toString().contains(" "))
             {
-                if (!text_e.getText().toString().isEmpty() && text_e.getText().toString().contains("@gmail.com"))
+                if (!text_e.getText().toString().isEmpty() && text_e.getText().toString().contains("@gmail.com") && text_e.getText().length()>15)
                 {
                     if (!text_p.getText().toString().isEmpty() && text_p.getText().toString().length()==10)
                     {
-                        if (!text_ps.getText().toString().isEmpty() && text_ps.getText().toString().contains("@"))
+                        Pnumber = text_p.getText().toString();
+                        if (!text_ps.getText().toString().isEmpty() && text_ps.getText().toString().contains("@") && text_ps.getText().length()<20)
                         {
                             if (!text_cps.getText().toString().isEmpty())
                             {
-                                if (!refer.getText().toString().isEmpty())
+                                if (text_ps.getText().toString().equals(text_cps.getText().toString()))
                                 {
-                                    if (text_ps.getText().toString().equals(text_cps.getText().toString()))
-                                    {
-                                        String ref = refer.getText().toString();
-                                        DBF.child(ref).addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists())
-                                                {
-                                                    String Ud = snapshot.getValue(String.class);
-                                                    DatabaseReference sk = FirebaseDatabase.getInstance().getReference("Users").child(Ud);
-                                                    sk.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            long p;
-                                                            p = snapshot.child("coin").getValue(long.class);
-                                                            sk.child("coin").setValue(p+2);
-                                                            text_e.setEnabled(false);
-                                                            text_p.setEnabled(false);
-                                                            text_ps.setEnabled(false);
-                                                            text_cps.setEnabled(false);
-                                                            name.setEnabled(false);
-                                                            refer.setEnabled(false);
-                                                            r.setEnabled(false);
-                                                            Toast.makeText(MainActivity.this, "Registration Started", Toast.LENGTH_SHORT).show();
-
-                                                            mFirebaseAuth.createUserWithEmailAndPassword(text_e.getText().toString().toLowerCase().trim(),text_p.getText().toString().trim())
-
-                                                                    .addOnCompleteListener(MainActivity.this, task1 -> {
-                                                                        if (task1.isSuccessful())
-                                                                        {
-                                                                            FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
-                                                                            assert u != null;
-                                                                            String Uid = u.getUid();
-                                                                            String Email = text_e.getText().toString();
-                                                                            String Password = text_cps.getText().toString();
-                                                                            String Phone = text_p.getText().toString();
-                                                                            String ReferBy = refer.getText().toString();
-                                                                            String Name = name.getText().toString();
-                                                                            Phones phone = new Phones(Phone);
-                                                                            dbR = DB.getReference("Users");
-
-                                                                            Map<String, Object> Users = new HashMap<>();
-                                                                            Users.put("name",Name);
-                                                                            Users.put("email",Email);
-                                                                            Users.put("password",Password);
-                                                                            Users.put("phone",Phone);
-                                                                            Users.put("referBy",ReferBy);
-                                                                            Users.put("coin",0);
-                                                                            Users.put("link","");
-                                                                            Users.put("date","");
-
-
-                                                                            dbR.child(Uid).setValue(Users).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                @Override
-                                                                                public void onComplete(@NonNull Task<Void> task) {
-
-                                                                                    Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).sendEmailVerification();
-                                                                                    mFirebaseAuth.getCurrentUser().sendEmailVerification();
-                                                                                    Toast.makeText(MainActivity.this, "Registration Complete", Toast.LENGTH_SHORT).show();
-                                                                                    Toast.makeText(MainActivity.this, "Verification Mail Has Been Send Your Gmail Id", Toast.LENGTH_SHORT).show();
-                                                                                    text_e.setText("");
-                                                                                    text_p.setText("");
-                                                                                    text_ps.setText("");
-                                                                                    text_cps.setText("");
-                                                                                    layout_reg.setVisibility(View.GONE);
-                                                                                    Intent intent =  new Intent(MainActivity.this, Home.class);
-                                                                                    startActivity(intent);
-
-                                                                                }
-                                                                            });
-                                                                            dbR2 = DB.getReference("Phones");
-                                                                            dbR2.child(Phone).setValue(phone);
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            Toast.makeText(MainActivity.this, "Registration Failed: " + task1.getException(), Toast.LENGTH_SHORT).show();
-                                                                            Log.e("RegistrationError", "Registration failed: " + task1.getException());
-                                                                            text_e.setEnabled(true);
-                                                                            text_p.setEnabled(true);
-                                                                            text_ps.setEnabled(true);
-                                                                            text_cps.setEnabled(true);
-                                                                            name.setEnabled(false);
-                                                                            refer.setEnabled(false);
-                                                                            r.setEnabled(true);
-                                                                        }
-                                                                    });
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                                        }
-                                                    });
-                                                }
-                                                else
-                                                {
-                                                    Toast.makeText(MainActivity.this,"Invalid Refer Id",Toast.LENGTH_SHORT).show();
-                                                }
+                                    DatabaseReference phone = FirebaseDatabase.getInstance().getReference("Phones").child(Pnumber);
+                                    phone.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot.exists())
+                                            {
+                                                Toast.makeText(MainActivity.this,"Phone Number Already Registered",Toast.LENGTH_SHORT).show();
+                                                numberCheck = true;
                                             }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
+                                            else
+                                            {
+                                                Name = name.getText().toString();
+                                                Email = text_e.getText().toString();
+                                                Password = text_cps.getText().toString();
+                                                Phone = text_p.getText().toString();
+                                                java.util.Date today = new Date();
+                                                Date = new SimpleDateFormat("yyyy-MM-dd").format(today);
+                                                Address = "";
+                                                Coin = 1.0;
+                                                Url = "";
+                                                ReferBy = refer.getText().toString();
+                                                //otp calling
+                                                loading();
+                                                Otp_dialog(Pnumber);
+                                                sendOtp();
                                             }
-                                        });
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(MainActivity.this,"Password Does Not matched",Toast.LENGTH_SHORT).show();
-                                    }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
                                 }
                                 else
                                 {
-                                    if (text_ps.getText().toString().equals(text_cps.getText().toString()))
-                                    {
-                                        text_e.setEnabled(false);
-                                        text_p.setEnabled(false);
-                                        text_ps.setEnabled(false);
-                                        text_cps.setEnabled(false);
-                                        name.setEnabled(false);
-                                        refer.setEnabled(false);
-                                        r.setEnabled(false);
-                                        Toast.makeText(MainActivity.this, "Registration Started", Toast.LENGTH_SHORT).show();
-
-                                        mFirebaseAuth.createUserWithEmailAndPassword(text_e.getText().toString().toLowerCase().trim(),text_p.getText().toString().trim())
-
-                                                .addOnCompleteListener(MainActivity.this, task1 -> {
-                                                    if (task1.isSuccessful())
-                                                    {
-                                                        FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
-                                                        assert u != null;
-                                                        String Uid = u.getUid();
-                                                        String Email = text_e.getText().toString();
-                                                        String Password = text_cps.getText().toString();
-                                                        String Phone = text_p.getText().toString();
-                                                        String ReferBy = "Admin(Dev)";
-                                                        String Name = name.getText().toString();
-                                                        Users users = new Users(Email,Phone,Password,ReferBy,Name);
-                                                        Phones phone = new Phones(Phone);
-
-                                                        Map<String, Object> Users = new HashMap<>();
-                                                        Users.put("name",Name);
-                                                        Users.put("email",Email);
-                                                        Users.put("password",Password);
-                                                        Users.put("phone",Phone);
-                                                        Users.put("referBy",ReferBy);
-                                                        Users.put("coin",0);
-                                                        Users.put("link","");
-                                                        Users.put("date","");
-
-                                                        dbR.child(Uid).setValue(Users).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-
-                                                                Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).sendEmailVerification();
-                                                                mFirebaseAuth.getCurrentUser().sendEmailVerification();
-                                                                Toast.makeText(MainActivity.this, "Registration Complete", Toast.LENGTH_SHORT).show();
-                                                                Toast.makeText(MainActivity.this, "Verification Mail Has Been Send Your Gmail Id", Toast.LENGTH_SHORT).show();
-                                                                text_e.setText("");
-                                                                text_p.setText("");
-                                                                text_ps.setText("");
-                                                                text_cps.setText("");
-                                                                layout_reg.setVisibility(View.GONE);
-                                                                Intent intent =  new Intent(MainActivity.this, Home.class);
-                                                                startActivity(intent);
-
-                                                            }
-                                                        });
-                                                        dbR2 = DB.getReference("Phones");
-                                                        dbR2.child(Phone).setValue(phone);
-                                                    }
-                                                    else
-                                                    {
-                                                        Toast.makeText(MainActivity.this, "Registration Failed: " + task1.getException(), Toast.LENGTH_SHORT).show();
-                                                        Log.e("RegistrationError", "Registration failed: " + task1.getException());
-                                                        text_e.setEnabled(true);
-                                                        text_p.setEnabled(true);
-                                                        text_ps.setEnabled(true);
-                                                        text_cps.setEnabled(true);
-                                                        name.setEnabled(false);
-                                                        refer.setEnabled(false);
-                                                        r.setEnabled(true);
-                                                    }
-                                                });
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(MainActivity.this,"Password Does Not Matched",Toast.LENGTH_SHORT).show();
-                                    }
+                                    Toast.makeText(MainActivity.this,"Password Does Not matched",Toast.LENGTH_SHORT).show();
                                 }
                             }
                             else
@@ -399,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         else
                         {
-                            Toast.makeText(MainActivity.this,"Enter Your Password",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this,"Password is not strong",Toast.LENGTH_SHORT).show();
                         }
                     }
                     else
@@ -409,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(MainActivity.this,"Enter Your Gmail Id",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"Enter Correct Gmail Id",Toast.LENGTH_SHORT).show();
                 }
             }
             else
@@ -420,60 +320,10 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        EditText text_e = findViewById(R.id.email_text_box2);
-        EditText text_p = findViewById(R.id.phone_text_box);
-        EditText text_ps = findViewById(R.id.password_text_box3);
-        EditText text_cps = findViewById(R.id.check_password_text_box);
-        EditText text_otp = findViewById(R.id.otp_text_box);
-        Button  register = findViewById(R.id.button_register);
-        Button  otp = findViewById(R.id.Button_otp);
-        TextView Resend = findViewById(R.id.Resend);
-        otp.setOnClickListener(v -> {
-            if (text_e.getText() != null && text_e.getText().toString().contains("@gmail.com"))
-            {
-                if (text_p.getText() != null && text_p.getText().toString().length()==10 )
-                {
-                    if (text_ps.getText() != null && text_ps.getText().toString().contains("@") && text_e.getText().toString().length()>6 && text_ps.getText().toString().length()<16)
-                    {
-                        if (text_cps.getText().toString().equals(text_ps.getText().toString()))
-                        {
-                            text_e.setEnabled(false);
-                            text_p.setEnabled(false);
-                            text_ps.setEnabled(false);
-                            text_cps.setEnabled(false);
-                            String Ph = "+91"+text_p.getText().toString().trim();
-                            sendOtp(Ph , false);
-
-
-                        }
-                        else {
-                            Toast.makeText(MainActivity.this, "Password Does Not Matched", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    else
-                    {
-                        Toast.makeText(MainActivity.this, "Enter Hard Password", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else {
-                    Toast.makeText(MainActivity.this, "Enter Correct Phone Number", Toast.LENGTH_SHORT).show();
-                }
-            }
-            else {
-                Toast.makeText(MainActivity.this, "Enter Correct Gmail Id", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         TextView r_l = findViewById(R.id.R_L);
         TextView l_r = findViewById(R.id.L_R);
         LinearLayout layout_r = findViewById(R.id.Register_layout);
-        LinearLayout layout_l = findViewById(R.id.main_layout);
+        LinearLayout layout_l = findViewById(R.id.login_layout);
 
         r_l.setOnClickListener(v -> {
             layout_r.setVisibility(View.GONE);
@@ -525,295 +375,238 @@ public class MainActivity extends AppCompatActivity {
 
         Button button_ver = findViewById(R.id.Button_send_verification);
 
-        button_ver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).sendEmailVerification();
-                Toast.makeText(MainActivity.this,"Verification Mail Send To Your Gmail Please Verify And Restart App",Toast.LENGTH_LONG).show();
-                button_ver.setVisibility(View.GONE);
-            }
+        button_ver.setOnClickListener(v -> {
+            Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).sendEmailVerification();
+            Toast.makeText(MainActivity.this,"Verification Mail Send To Your Gmail Please Verify And Restart App",Toast.LENGTH_LONG).show();
+            button_ver.setVisibility(View.GONE);
         });
 
 
 
     }
+    private void onHeadlessCallback(@NonNull final HeadlessResponse response) {
+        if (response.getStatusCode() == 200) {
+            switch (response.getResponseType()) {
+                case "INITIATE":
+                    // notify that headless authentication has been initiated
+                    Toast.makeText(getApplicationContext(),"Otp sent",Toast.LENGTH_SHORT).show();
+                    break;
+                case "VERIFY":
+                    Otp_dialog_cancel();
+                    registeration();
+                    // notify that verification is completed
+                    // and this is notified just before "ONETAP" final response
+                    break;
+                case "OTP_AUTO_READ":
+                    final String otp = response.getResponse().optString("otp");
+                    Context context = getApplicationContext();
+                    Otp otp1 = new Otp(context,otp);
+                    break;
+                case "ONETAP":
+                    // final response with token
+                    final JSONObject responseWithToken = response.getResponse();
+                    this.responseWithToken1 = responseWithToken;
+                    //mDatabaseReference.child(Uid).child("Registration_response").setValue(responseWithToken);
+                    break;
+            }
+            JSONObject successResponse = response.getResponse();
+            this.successResponse1 = successResponse;
+        } else {
+            // handle error
+            String error = response.getResponse().optString("errorMessage");
+            Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+        }
+    }
 
-
-    void sendOtp (String PhoneNumber, @NonNull Boolean isResend)
+    public void Otp_dialog(String number)
     {
-        PhoneAuthOptions.Builder builder =
-        PhoneAuthOptions.newBuilder(mFirebaseAuth)
-                .setPhoneNumber(String.valueOf(PhoneNumber))
-                .setTimeout(120L, TimeUnit.SECONDS)
-                .setActivity(this)
-                .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        Context context = MainActivity.this;
+        otp = new Otp(context,number);
+        otp.setOtplessView(otplessView);
+        otp.setOtp_ref(otp);
+        otp.setMain(main);
+        otp.setCancelable(false);
+        otp.getWindow().setBackgroundDrawable(getDrawable(R.drawable.otp));
+        otp.getWindow().setWindowAnimations(R.style.DialogAnimation);
+        otp.getWindow().setGravity(Gravity.BOTTOM);
+        otp.create();
+        otp.show();
+    }
+
+    void Otp_dialog_cancel()
+    {
+        otp.dismiss();
+    }
+
+
+    public void loading(){
+        popDialog.setCancelable(false);
+        popDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.loading_popup));
+        popDialog.getWindow().setWindowAnimations(R.style.popupAnimation);
+        popDialog.getWindow().setGravity(Gravity.CENTER);
+        popDialog.create();
+        popDialog.show();
+    }
+
+    public void loading_cancel(){
+        popDialog.cancel();
+    }
+
+
+    void SetOtp(String otp){
+        this.OTP = otp;
+        final HeadlessRequest request = new HeadlessRequest();
+        request.setPhoneNumber("91", this.Phone);
+        request.setOtp(String.valueOf(this.OTP));
+        otplessView.startHeadless(request, this::onHeadlessCallback);
+    }
+
+    void sendOtp(){
+        request = new HeadlessRequest();
+        request.setPhoneNumber("91",Pnumber);
+        otplessView.startHeadless(request, MainActivity.this::onHeadlessCallback);
+    }
+
+    void registeration(){
+        Toast.makeText(MainActivity.this,"Registration started",Toast.LENGTH_SHORT).show();
+        mFirebaseAuth.createUserWithEmailAndPassword(Email,Password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                Uid = mFirebaseAuth.getCurrentUser().getUid();
+                users = new User_update(Name,Email,Phone,Password,ReferBy,Date,Coin,Url,Address);
+                if (!ReferBy.equals("Admin"))
+                {
+                    users.setCoin(5);
+                }
+                refer.child(ReferBy).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                        Button button_ot = findViewById(R.id.Button_otp);
-                        Button button_reg = findViewById(R.id.button_register);
-                        TextView resend = findViewById(R.id.Resend);
-                        EditText text_otp = findViewById(R.id.otp_text_box);
-
-                        text_otp.setVisibility(View.VISIBLE);
-                        button_ot.setVisibility(View.GONE);
-                        button_reg.setVisibility(View.VISIBLE);
-                        resend.setVisibility(View.VISIBLE);
-
-
-                        Toast.makeText(MainActivity.this,"Otp Send Successfully1",Toast.LENGTH_SHORT).show();
-
-                        button_ot.setVisibility(View.GONE);
-                        button_reg.setVisibility(View.VISIBLE);
-                        resend.setVisibility(View.VISIBLE);
-
-
-                        LinearLayout layout_l = findViewById(R.id.main_layout);
-                        LinearLayout layout_reg = findViewById(R.id.Register_layout);
-
-                        EditText text_e = findViewById(R.id.email_text_box2);
-                        EditText text_p = findViewById(R.id.phone_text_box);
-                        EditText text_ps = findViewById(R.id.password_text_box3);
-                        EditText text_cps = findViewById(R.id.check_password_text_box);
-                        //EditText text_otp = findViewById(R.id.otp_text_box);
-
-                        FirebaseDatabase DB = FirebaseDatabase.getInstance();
-
-                        button_reg.setOnClickListener(v -> {
-
-                            String Otp = text_otp.getText().toString();
-                            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(vCode,Otp);
-
-
-                            mFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    Toast.makeText(MainActivity.this,"Otp Is Verified",Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(MainActivity.this, "Registration Started", Toast.LENGTH_SHORT).show();
-
-                                    mFirebaseAuth.createUserWithEmailAndPassword(text_e.getText().toString().toLowerCase(),text_p.getText().toString().trim())
-                                            .addOnCompleteListener(MainActivity.this, task1 -> {
-                                                if (task1.isSuccessful())
-                                                {
-                                                    FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
-                                                    assert u != null;
-                                                    String Uid = u.getUid();
-                                                    String Email = text_e.getText().toString();
-                                                    String Password = text_cps.getText().toString();
-                                                    String Phone = text_p.getText().toString();
-                                                    String ReferBy = null;
-                                                    String Name = null;
-                                                    Users users = new Users(Email,Phone,Password,ReferBy,Name);
-                                                    Phones phone = new Phones(Phone);
-                                                    dbR = DB.getReference("Users");
-                                                    dbR.child(Uid).setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            refer.child(ReferBy).child("UID").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    /*******************************************************/
+                                    uids = snapshot.getValue(String.class);
+                                    mDatabaseReference.child(uids).child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            double coin = snapshot.getValue(double.class);
+                                            coin += 10;
+                                            mDatabaseReference.child(uids).child("coin").setValue(coin).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    refer.child(ReferBy).child("Referred").addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            if (snapshot.exists()) {
+                                                                String Ids = snapshot.getValue(String.class);
+                                                                Ids += Uid + ",";
+                                                                refer.child(ReferBy).child("Referred").setValue(Ids).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
 
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                refer.child(ReferBy).child("Referred").setValue(Uid);
+                                                            }
+                                                            mDatabaseReference.setValue(Uid).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    mDatabaseReference.child(Uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                            if (snapshot.exists())
+                                                                            {
+                                                                                mDatabaseReference.child(Uid).setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                    @Override
+                                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                                        record = new AirtableRecord(Uid,Name,Email,Phone,Password,ReferBy,Date,Coin,Url,Address);
+                                                                                        apiService = AirtableClient.getClient().create(AirtableAPI.class);
+                                                                                        Call<AirtableResponse> call = apiService.createRecord(record);
+                                                                                        call.enqueue(new Callback<AirtableResponse>() {
+                                                                                            @Override
+                                                                                            public void onResponse(Call<AirtableResponse> call, Response<AirtableResponse> response) {
+                                                                                                if (response.isSuccessful()) {
+                                                                                                    phoneReference.child(Phone).child("phones").setValue(Phone).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                        @Override
+                                                                                                        public void onComplete(@NonNull Task<Void> task) {
 
-                                                            Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).sendEmailVerification();
-                                                            mFirebaseAuth.getCurrentUser().sendEmailVerification();
-                                                            Toast.makeText(MainActivity.this, "Registration Complete", Toast.LENGTH_SHORT).show();
-                                                            Toast.makeText(MainActivity.this, "Verification Mail Has Been Send Your Gmail Id", Toast.LENGTH_SHORT).show();
-                                                            text_e.setText("");
-                                                            text_p.setText("");
-                                                            text_ps.setText("");
-                                                            text_cps.setText("");
-                                                            text_otp.setVisibility(View.GONE);
-                                                            button_ot.setVisibility(View.VISIBLE);
-                                                            button_reg.setVisibility(View.GONE);
-                                                            resend.setVisibility(View.GONE);
-                                                            layout_l.setVisibility(View.GONE);
-                                                            layout_reg.setVisibility(View.VISIBLE);
-                                                            mFirebaseAuth.signOut();
-                                                            Toast.makeText(MainActivity.this,"Login To Go Ahead",Toast.LENGTH_SHORT).show();
+                                                                                                            if (MainActivity.this.responseWithToken1 != null) {
+                                                                                                                mDatabaseReference.child(Uid).child("Registration_response").setValue(MainActivity.this.responseWithToken1);
+                                                                                                            }
+                                                                                                            if (MainActivity.this.successResponse1 != null){
+                                                                                                                mDatabaseReference.child(Uid).child("Success_response").setValue(MainActivity.this.successResponse1);
+                                                                                                            }
+
+                                                                                                            Toast.makeText(getApplicationContext(), "Registration successful", Toast.LENGTH_SHORT).show();
+                                                                                                            mFirebaseAuth.getCurrentUser().sendEmailVerification();
+                                                                                                            loading_cancel();
+                                                                                                            Intent intent =  new Intent(MainActivity.this, Home.class);
+                                                                                                            startActivity(intent);
+                                                                                                            Log.d("Airtable", "Record added: " + response.body().getId());
+                                                                                                        }
+                                                                                                    });
+                                                                                                } else {
+                                                                                                    Toast.makeText(getApplicationContext(), response.message(), Toast.LENGTH_SHORT).show();
+                                                                                                    Log.d("Airtable", "Failed to add record: " + response.message());
+                                                                                                }
+                                                                                            }
+
+                                                                                            @Override
+                                                                                            public void onFailure(Call<AirtableResponse> call, Throwable t) {
+                                                                                                Log.e("Airtable", "Error: " + t.getMessage());
+                                                                                                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
                                                         }
-                                                    });
-                                                    dbR2 = DB.getReference("Phones");
-                                                    dbR2.child(Phone).setValue(phone);
-                                                }
-                                                else
-                                                {
-                                                    Toast.makeText(MainActivity.this, "Registration Failed: " + task.getException(), Toast.LENGTH_SHORT).show();
-                                                    Log.e("RegistrationError", "Registration failed: " + task.getException());
-                                                    button_reg.setEnabled(true);
-                                                }
-                                            });
-                                }
-                                else
-                                {
-                                    Toast.makeText(MainActivity.this,""+task.getException(),Toast.LENGTH_LONG).show();
-                                    button_reg.setEnabled(true);
-                                }
-                            });
 
-
-                        });
-
-
-                    }
-
-                    @Override
-                    public void onVerificationFailed(@NonNull FirebaseException e) {
-                        Toast.makeText(MainActivity.this,"Otp Send Failed2"+e.getMessage(),Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                        super.onCodeSent(s, forceResendingToken);
-                        vCode = s;
-                        FRT = forceResendingToken;
-                        Toast.makeText(MainActivity.this,"Otp send Successfully3",Toast.LENGTH_SHORT).show();
-
-                        EditText text_e = findViewById(R.id.email_text_box2);
-                        EditText text_p = findViewById(R.id.phone_text_box);
-                        EditText text_ps = findViewById(R.id.password_text_box3);
-                        EditText text_cps = findViewById(R.id.check_password_text_box);
-                        EditText text_otp = findViewById(R.id.otp_text_box);
-
-                        Button button_ot = findViewById(R.id.Button_otp);
-                        Button button_reg = findViewById(R.id.button_register);
-                        TextView resend = findViewById(R.id.Resend);
-
-//                        Button button_ot = findViewById(R.id.Button_otp);
-//                        Button button_reg = findViewById(R.id.button_register);
-//                        TextView resend = findViewById(R.id.Resend);
-//                        EditText text_otp = findViewById(R.id.otp_text_box);
-
-                        text_otp.setVisibility(View.VISIBLE);
-                        button_ot.setVisibility(View.GONE);
-                        button_reg.setVisibility(View.VISIBLE);
-                        resend.setVisibility(View.VISIBLE);
-                        LinearLayout layout_l = findViewById(R.id.main_layout);
-                        LinearLayout layout_reg = findViewById(R.id.Register_layout);
-
-                        FirebaseDatabase DB = FirebaseDatabase.getInstance();
-
-
-                        button_reg.setOnClickListener(v -> {
-
-                            String Otp = text_otp.getText().toString();
-                            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(vCode,Otp);
-
-
-                            mFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    Toast.makeText(MainActivity.this,"Otp Is Verified",Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(MainActivity.this, "Registration Started", Toast.LENGTH_SHORT).show();
-
-                                    mFirebaseAuth.createUserWithEmailAndPassword(text_e.getText().toString().toLowerCase(),text_p.getText().toString().trim())
-                                            .addOnCompleteListener(MainActivity.this, task1 -> {
-                                                if (task1.isSuccessful())
-                                                {
-                                                    FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
-                                                    assert u != null;
-                                                    String Uid = u.getUid();
-                                                    String Email = text_e.getText().toString();
-                                                    String Password = text_cps.getText().toString();
-                                                    String Phone = text_p.getText().toString();
-                                                    String ReferBy = null;
-                                                    String Name = null;
-                                                    Users users = new Users(Email,Phone,Password,ReferBy,Name);
-                                                    Phones phone = new Phones(Phone);
-                                                    dbR = DB.getReference("Users");
-                                                    dbR.child(Uid).setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-
-                                                            Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).sendEmailVerification();
-                                                            mFirebaseAuth.getCurrentUser().sendEmailVerification();
-                                                            Toast.makeText(MainActivity.this, "Registration Complete", Toast.LENGTH_SHORT).show();
-                                                            Toast.makeText(MainActivity.this, "Verification Mail Has Been Send Your Gmail Id", Toast.LENGTH_SHORT).show();
-                                                            text_e.setText("");
-                                                            text_p.setText("");
-                                                            text_ps.setText("");
-                                                            text_cps.setText("");
-                                                            text_otp.setVisibility(View.GONE);
-                                                            button_ot.setVisibility(View.VISIBLE);
-                                                            button_reg.setVisibility(View.GONE);
-                                                            resend.setVisibility(View.GONE);
-                                                            layout_reg.setVisibility(View.GONE);
-                                                            layout_l.setVisibility(View.VISIBLE);
-                                                            mFirebaseAuth.signOut();
-                                                            Toast.makeText(MainActivity.this,"Login To Go Ahead",Toast.LENGTH_SHORT).show();
+                                                        public void onCancelled(@NonNull DatabaseError error) {
 
                                                         }
                                                     });
-                                                    dbR2 = DB.getReference("Phones");
-                                                    dbR2.child(Phone).setValue(phone);
-                                                }
-                                                else
-                                                {
-                                                    Toast.makeText(MainActivity.this, "Registration Failed: " + task.getException(), Toast.LENGTH_SHORT).show();
-                                                    Log.e("RegistrationError", "Registration failed: " + task.getException());
-                                                    button_reg.setEnabled(true);
                                                 }
                                             });
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
                                 }
-                                else
-                                {
-                                    Toast.makeText(MainActivity.this,""+task.getException(),Toast.LENGTH_LONG).show();
-                                    button_reg.setEnabled(true);
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
                                 }
                             });
+                        }
+                    }
 
-
-                        });
-
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
-
-        if (isResend)
-        {
-            PhoneAuthProvider.verifyPhoneNumber(builder.setForceResendingToken(FRT).build());
-        }
-        else
-        {
-            FRT = null;
-
-            PhoneAuthProvider.verifyPhoneNumber(builder.build());
-        }
-
-
-        TextView Ctext = findViewById(R.id.Email_change_text_b0x);
-        Button Cbutton = findViewById(R.id.Gmail_change);
-        Cbutton.setOnClickListener(v -> {
-            if (Ctext.getText() == null && Ctext.getText().toString().contains("@gmail.com"))
-            {
-                Toast.makeText(MainActivity.this,"Enter Correct Gmail Id",Toast.LENGTH_SHORT).show();
             }
-            else
-            {
-                Toast.makeText(MainActivity.this,"Enter Correct Gmail Id",Toast.LENGTH_SHORT).show();
+            else{
+                Toast.makeText(getApplicationContext(), (CharSequence) task.getException(), Toast.LENGTH_SHORT).show();
             }
+
         });
-
-
-        TextView Resend_otp  = findViewById(R.id.Resend);
-        TextView Otp = findViewById(R.id.otp_text_box);
-        String Phone = "+91"+Otp.getText().toString();
-        Resend_otp.setOnClickListener(v -> {
-            sendOtp(Phone,true);
-            Toast.makeText(MainActivity.this,"Otp Resend",Toast.LENGTH_SHORT).show();
-        });
-    }
-
-    private void textStyle()
-    {
-        AwesomeValidation awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
-
-        AwesomeValidation awesomeValidation_color = new AwesomeValidation(ValidationStyle.COLORATION);
-        awesomeValidation_color.setColor(Color.YELLOW); // Set the color for validation
-
-        AwesomeValidation awesomeValidation_underline = new AwesomeValidation(ValidationStyle.UNDERLABEL);
-        awesomeValidation_underline.setContext(this); // Set the context for validation
-    }
-
-    private void hideStatusBar() {
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        uiOptions = uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        decorView.setSystemUiVisibility(uiOptions);
     }
 }
