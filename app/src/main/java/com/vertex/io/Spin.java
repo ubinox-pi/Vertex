@@ -36,6 +36,8 @@ public class Spin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spin);
 
+        //Todo: have to implement advertisement
+
         displayPoints();
         androidx.appcompat.widget.Toolbar actionBar = findViewById(R.id.action);
         actionBar.setNavigationIcon(ContextCompat.getDrawable(Spin.this,R.drawable.arrow_back));

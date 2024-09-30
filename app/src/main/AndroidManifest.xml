@@ -26,10 +26,13 @@
         android:theme="@style/Theme.Vertex"
         tools:targetApi="34">
         <activity
-            android:name=".refer"
+            android:name=".information"
             android:exported="false" />
         <activity
-            android:name=".LongTask"
+            android:name=".Task"
+            android:exported="false" />
+        <activity
+            android:name=".refer"
             android:exported="false" />
         <activity
             android:name=".Math"

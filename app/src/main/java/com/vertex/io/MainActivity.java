@@ -52,6 +52,10 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    static {
+        System.loadLibrary("io");
+    }
+
     FirebaseAuth mFirebaseAuth;
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mDatabaseReference;
@@ -232,6 +236,9 @@ public class MainActivity extends AppCompatActivity {
         Button registration = findViewById(R.id.Button_r2);
         registration.setOnClickListener(v -> {
             EditText text_e = findViewById(R.id.email_text_box2);
+            e.setOnClickListener(q -> {
+
+            });
             EditText text_p = findViewById(R.id.phone_text_box);
             EditText text_ps = findViewById(R.id.password_text_box3);
             EditText text_cps = findViewById(R.id.check_password_text_box);

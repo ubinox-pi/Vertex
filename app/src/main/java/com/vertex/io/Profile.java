@@ -1,6 +1,8 @@
 package com.vertex.io;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,21 +10,19 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.github.drjacky.imagepicker.ImagePicker;
 import com.github.drjacky.imagepicker.constant.ImageProvider;
@@ -119,14 +119,35 @@ public class Profile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.edit), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
         popDialog = new pop_dialog(this);
+
+
+        ImageView copy = findViewById(R.id.copy);
+        TextView userId = findViewById(R.id.UID);
+        copy.setOnClickListener(v->{
+            ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Copied Text", userId.getText().toString());
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(this,"Copied to clipboard",Toast.LENGTH_SHORT).show();
+        });
+
+        userId.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                loading();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                loading_cancel();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         ImageView profile = findViewById(R.id.Profile);
         profile.setOnClickListener(v -> {
@@ -138,6 +159,7 @@ public class Profile extends AppCompatActivity {
                     .createIntentFromDialog((Function1)(new Function1(){
                         public Object invoke(Object var1){
                             this.invoke((Intent)var1);
+                            loading();
                             return Unit.INSTANCE;
                         }
                         public final void invoke(@NotNull Intent it){
@@ -208,22 +230,6 @@ public class Profile extends AppCompatActivity {
         });
 
 
-        ImageView edit = findViewById(R.id.Edit);
-        ImageView edit2 = findViewById(R.id.Edit2);
-        ImageView edit3 = findViewById(R.id.Edit3);
-        edit.setOnClickListener(v -> {
-            Toast.makeText(context, "Contact Customer Care To Edit These", Toast.LENGTH_SHORT).show();
-        });
-
-        edit2.setOnClickListener(v -> {
-            Toast.makeText(context, "Contact Customer Care To Edit These", Toast.LENGTH_SHORT).show();
-        });
-
-        edit3.setOnClickListener(v -> {
-            Toast.makeText(context, "Contact Customer Care To Edit These", Toast.LENGTH_SHORT).show();
-        });
-
-
     }
 
     @Override
@@ -233,23 +239,44 @@ public class Profile extends AppCompatActivity {
         String UID = mAuth.getCurrentUser().getUid().toString();
         FirebaseDatabase mDB = FirebaseDatabase.getInstance();
         DatabaseReference Users = FirebaseDatabase.getInstance().getReference("Users").child(UID);
-        EditText uid = findViewById(R.id.UID);
-        EditText name = findViewById(R.id.Name);
-        EditText gmail = findViewById(R.id.Gmail);
-        EditText phone = findViewById(R.id.Phone);
+        TextView uid = findViewById(R.id.UID);
+        TextView name = findViewById(R.id.Name);
+        TextView gmail = findViewById(R.id.Gmail);
+        TextView phone = findViewById(R.id.Phone);
+        TextView url = findViewById(R.id.Url);
+        TextView pan = findViewById(R.id.pan_no);
+        TextView identification = findViewById(R.id.Addhar);
+        TextView address = findViewById(R.id.Address);
+
         uid.setText(mAuth.getCurrentUser().getUid().toString());
 
         Users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String Name,Gmail,Phone;
+                String Name,Gmail,Phone, Url, Pan, Identification, Address;
                 Name = snapshot.child("name").getValue(String.class);
                 Gmail = snapshot.child("email").getValue(String.class);
                 Phone = snapshot.child("phone").getValue(String.class);
                 name.setText(Name);
                 gmail.setText(Gmail);
                 phone.setText("+91"+Phone);
-
+                if (snapshot.child("Url").exists()){
+                    Url = snapshot.child("Url").getValue(String.class);
+                    url.setText(Url);
+                }
+                if (snapshot.child("pan_no").exists())
+                {
+                    Pan = snapshot.child("pan_no").getValue(String.class);
+                    pan.setText(Pan);
+                }
+                if (snapshot.child("Addhar").exists()){
+                    Identification = snapshot.child("Addhar").getValue(String.class);
+                    identification.setText(Identification);
+                }
+                if (snapshot.child("Address").exists()){
+                    Address = snapshot.child("Address").getValue(String.class);
+                    address.setText(Address);
+                }
             }
 
             @Override

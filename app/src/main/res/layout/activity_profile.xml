@@ -7,154 +7,280 @@
     android:layout_height="match_parent"
     tools:context=".Profile">
 
-    <LinearLayout
-        android:id="@+id/Main"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:fontFamily="@font/calistoga"
-            android:text="PROFILE"
-            android:textColor="#000000"
-            android:textSize="28sp"
-            android:textStyle="bold" />
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-            android:layout_marginBottom="10dp"
-            android:elevation="12dp"
-            android:id="@+id/view2"
-            app:cardCornerRadius="1000dp"
-            android:layout_centerHorizontal="true">
-
-            <ImageView
-                android:id="@+id/Profile"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/profile_pic" />
-        </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toTopOf="parent" >
 
         <LinearLayout
+            android:id="@+id/Main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_app"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <EditText
-                android:id="@+id/UID"
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/calistoga"
+                android:text="PROFILE"
+                android:textColor="@color/primary_text"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/view2"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:elevation="12dp"
+                app:cardCornerRadius="1000dp">
+
+                <ImageView
+                    android:id="@+id/Profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/profile_pic" />
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="false"
-                android:fontFamily="@font/calistoga"
-                android:inputType="text"
-                android:text="XXX_XXX_XXX_XXX"
-                android:textColor="#000000" />
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/calistoga"
+                    android:text="UID"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/UID"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="center|start"
+                        android:enabled="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/calistoga"
+                        android:inputType="text"
+                        android:text="XXX_XXX_XXX_XXX"
+                        android:textColor="@color/secondary_text" />
+                    <ImageView
+                        android:id="@+id/copy"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:src="@drawable/copy"/>
 
-            <EditText
-                android:id="@+id/Name"
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="false"
-                android:fontFamily="@font/calistoga"
-                android:inputType="text"
-                android:text="XXX_XXX_XXX_XXX"
-                android:textColor="#000000" />
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/Edit2"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/pencil" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/calistoga"
+                    android:text="Name"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/Name"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center|start"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:fontFamily="@font/calistoga"
+                    android:inputType="text"
+                    android:text="XXX_XXX_XXX_XXX"
+                    android:textColor="@color/secondary_text" />
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/Gmail"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="false"
-                android:fontFamily="@font/calistoga"
-                android:inputType="text"
-                android:text="XXX_XXX_XXX_XXX"
-                android:textColor="#000000" />
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/Edit3"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/pencil" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/calistoga"
+                    android:text="Gmail Id"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/Gmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center|start"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:fontFamily="@font/calistoga"
+                    android:inputType="text"
+                    android:text="XXX_XXX_XXX_XXX"
+                    android:textColor="@color/secondary_text" />
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/Phone"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="false"
-                android:fontFamily="@font/calistoga"
-                android:inputType="text"
-                android:text="XXX_XXX_XXX_XXX"
-                android:textColor="#000000" />
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone number"
+                    android:fontFamily="@font/calistoga"
+                    android:textSize="16sp"
+                    android:textColor="@color/primary_text"/>
 
-            <ImageView
-                android:id="@+id/Edit"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/pencil" />
+                <TextView
+                    android:id="@+id/Phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center|start"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:fontFamily="@font/calistoga"
+                    android:inputType="text"
+                    android:text="XXX_XXX_XXX_XXX"
+                    android:textColor="@color/secondary_text" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profile Url"
+                    android:fontFamily="@font/calistoga"
+                    android:textSize="16sp"
+                    android:textColor="@color/primary_text"/>
+
+                <TextView
+                    android:id="@+id/Url"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center|start"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:fontFamily="@font/calistoga"
+                    android:inputType="text"
+                    android:text="XXX_XXX_XXX_XXX"
+                    android:textColor="@color/secondary_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PAN number"
+                    android:fontFamily="@font/calistoga"
+                    android:textSize="16sp"
+                    android:textColor="@color/primary_text"/>
+
+                <TextView
+                    android:id="@+id/pan_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center|start"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:fontFamily="@font/calistoga"
+                    android:inputType="text"
+                    android:text="XXX_XXX_XXX_XXX"
+                    android:textColor="@color/secondary_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Identity number"
+                    android:fontFamily="@font/calistoga"
+                    android:textSize="16sp"
+                    android:textColor="@color/primary_text"/>
+
+                <TextView
+                    android:id="@+id/Addhar"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center|start"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:fontFamily="@font/calistoga"
+                    android:inputType="text"
+                    android:text="XXX_XXX_XXX_XXX"
+                    android:textColor="@color/secondary_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Address"
+                    android:fontFamily="@font/calistoga"
+                    android:textSize="16sp"
+                    android:textColor="@color/primary_text"/>
+
+                <TextView
+                    android:id="@+id/Address"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:fontFamily="@font/calistoga"
+                    android:gravity="start|top"
+                    android:inputType="text"
+                    android:singleLine="false"
+                    android:text="XXX_XXX_XXX_XXX"
+                    android:textColor="@color/secondary_text" />
+            </LinearLayout>
+
         </LinearLayout>
+    </ScrollView>
 
-        <Button
-            android:id="@+id/Submit"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/round_btn"
-            android:fontFamily="@font/calistoga"
-            android:text="Submit"
-            android:textColor="#000000"
-            android:textSize="24sp" />
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

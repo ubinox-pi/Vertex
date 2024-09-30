@@ -10,9 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Random;
@@ -31,7 +30,7 @@ public class refer extends AppCompatActivity {
     private TextView refer;
     private Button generate;
     private TextView points;
-    private Toolbar appBar;
+    private androidx.appcompat.widget.Toolbar appBar;
     private String UID;
     public pop_dialog popDialog;
     FirebaseAuth firebaseAuth;
@@ -42,8 +41,8 @@ public class refer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_refer);
+        popDialog = new pop_dialog(refer.this);
         loading();
 
         refer = findViewById(R.id.refer_id);
@@ -140,13 +139,13 @@ public class refer extends AppCompatActivity {
     {
         Random random = new Random();
         String uid = UID.substring(0,3);
-        String alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        String alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder sb = new StringBuilder(3);
         for (int i = 0; i < 3; i++) {
             sb.append(alphabets.charAt(random.nextInt(alphabets.length())));
         }
         Date today = new Date();
-        String date = String.valueOf(today).substring(0,6);
-        return uid+date+sb.toString().toUpperCase();
+        String date = new SimpleDateFormat("ddMMyy").format(today);
+        return uid+date+sb.toString().toUpperCase().trim();
     }
 }

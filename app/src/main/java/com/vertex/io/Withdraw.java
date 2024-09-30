@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -20,25 +21,32 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.Math;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.lang.Math;
 
 
 public class Withdraw extends AppCompatActivity {
+    long count;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_withdraw);
 
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.appbar);
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(Withdraw.this,R.drawable.arrow_back));
+        toolbar.setNavigationOnClickListener(v->{
+            finish();
+        });
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase DB = FirebaseDatabase.getInstance();
         String UID = mAuth.getCurrentUser().getUid().toString();
         DatabaseReference Point = DB.getReference("Users").child(UID).child("coin");
-        TextView coin_label = findViewById(R.id.Point_textview);
+        TextView coin_label = findViewById(R.id.point);
 
 
         Point.addValueEventListener(new ValueEventListener() {
@@ -141,15 +149,33 @@ public class Withdraw extends AppCompatActivity {
                                             transactionDetails.put("txnId", Txn_id);
                                             transactionDetails.put("date", todayStr);
                                             transactionDetails.put("status", "pending");
-                                            User_withdrawal.child(Txn_id).setValue(transactionDetails).addOnCompleteListener(task2 ->{
-                                                if (task2.isSuccessful())
-                                                {
-                                                    withdrawal_all.child(Txn_id).setValue(transactionDetails).addOnCompleteListener(task1 -> {
-                                                        if (task1.isSuccessful())
+                                            User_withdrawal.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if (snapshot.exists())
+                                                    {
+                                                        count = snapshot.getChildrenCount();
+                                                    }
+                                                    else {
+                                                        count = 1;
+                                                    }
+                                                    User_withdrawal.child(String.valueOf(count)).setValue(transactionDetails).addOnCompleteListener(task2 ->{
+                                                        if (task2.isSuccessful())
                                                         {
-                                                            Toast.makeText(Withdraw.this, "Withdrawal Success", Toast.LENGTH_SHORT).show();
-                                                            upi.setText("");
-                                                            amount.setText("");
+                                                            withdrawal_all.child(Txn_id).setValue(transactionDetails).addOnCompleteListener(task1 -> {
+                                                                if (task1.isSuccessful())
+                                                                {
+                                                                    Toast.makeText(Withdraw.this, "Withdrawal Success", Toast.LENGTH_SHORT).show();
+                                                                    upi.setText("");
+                                                                    amount.setText("");
+                                                                }
+                                                                else
+                                                                {
+                                                                    Toast.makeText(Withdraw.this, "Withdrawal Failed", Toast.LENGTH_SHORT).show();
+                                                                    with.setEnabled(true);
+                                                                    with.setBackgroundResource(R.drawable.round_btn);
+                                                                }
+                                                            });
                                                         }
                                                         else
                                                         {
@@ -159,11 +185,10 @@ public class Withdraw extends AppCompatActivity {
                                                         }
                                                     });
                                                 }
-                                                else
-                                                {
-                                                    Toast.makeText(Withdraw.this, "Withdrawal Failed", Toast.LENGTH_SHORT).show();
-                                                    with.setEnabled(true);
-                                                    with.setBackgroundResource(R.drawable.round_btn);
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
                                                 }
                                             });
                                         }

@@ -7,9 +7,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -59,7 +61,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -71,7 +72,6 @@ public class Home extends AppCompatActivity {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private AdView mAdView;
     private RewardedAd rewardedAd;
-    Activity activity;
     private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
 
     private void showPermissionDeniedDialog() {
@@ -112,6 +112,39 @@ public class Home extends AppCompatActivity {
         LottieAnimationView animationView = findViewById(R.id.animationView);
         ScrollView scrollView = findViewById(R.id.scroll);
 
+
+
+        // Register a NetworkCallback to listen for changes in connectivity
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // For Android Nougat (API 24) and above, register the network callback
+            connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
+                @Override
+                public void onAvailable(Network network) {
+                    // Network is available, check for internet connectivity
+                    runOnUiThread(() -> checkInternetConnectivity(connectivityManager));
+                }
+
+                @Override
+                public void onLost(Network network) {
+                    // Network is lost
+                    Intent intent = new Intent(Home.this, No_Internet.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            // For devices below Android N, use BroadcastReceiver to monitor network changes
+            IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+            registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    checkInternetConnectivity(connectivityManager);
+                }
+            }, filter);
+        }
+
+
+
         // Todo: implement in mainActivity
 
 //        Otp otp = new Otp(context,"9801112671");
@@ -122,6 +155,10 @@ public class Home extends AppCompatActivity {
 //        otp.create();
 //        otp.show();
 
+        ImageView refer = findViewById(R.id.refer);
+        refer.setOnClickListener(v->{
+            startActivity(new Intent(this,com.vertex.io.refer.class));
+        });
 
 
 
@@ -189,24 +226,6 @@ public class Home extends AppCompatActivity {
             }
         });
 
-        LinearLayout Profile = findViewById(R.id.nav_profile);
-        LinearLayout wallet = findViewById(R.id.nav_wallet);
-        LinearLayout privacy = findViewById(R.id.nav_privacy_policy);
-        LinearLayout terms_and_condition = findViewById(R.id.nav_terms_and_condition);
-        LinearLayout about_us = findViewById(R.id.nav_about_us);
-        LinearLayout contact_us = findViewById(R.id.nav_contact_us);
-        LinearLayout faqs = findViewById(R.id.nav_faq);
-
-        Profile.setOnClickListener(v ->{
-            Intent intent = new Intent(Home.this, Profile.class);
-            startActivity(intent);
-        });
-        wallet.setOnClickListener(v ->{
-            Intent intent = new Intent(Home.this, Withdraw.class);
-            startActivity(intent);
-        });
-
-
         DrawerLayout drawerLayout = findViewById(R.id.drawer);
         NavigationView navigationView = findViewById(R.id.navigation_view);
         androidx.appcompat.widget.Toolbar actionBar = findViewById(R.id.home_action);
@@ -218,6 +237,27 @@ public class Home extends AppCompatActivity {
         profile.setOnClickListener(v -> {
             Intent intent =  new Intent(context, Profile.class);
             startActivity(intent);
+        });
+
+        com.google.android.material.navigation.NavigationView navigationView2 = findViewById(R.id.navigation_view);
+        LinearLayout Profile = findViewById(R.id.nav_profile);
+        LinearLayout wallet = findViewById(R.id.nav_wallet);
+        LinearLayout privacy = findViewById(R.id.nav_privacy_policy);
+        LinearLayout terms_and_condition = findViewById(R.id.nav_terms_and_condition);
+        LinearLayout about_us = findViewById(R.id.nav_about_us);
+        LinearLayout contact_us = findViewById(R.id.nav_contact_us);
+        LinearLayout faqs = findViewById(R.id.nav_faq);
+
+        Profile.setOnClickListener(a ->{
+            Intent intent = new Intent(Home.this, Profile.class);
+            startActivity(intent);
+            drawerLayout.closeDrawers();
+        });
+        wallet.setOnClickListener(a ->{
+            Toast.makeText(context, "Wallet", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Home.this, Withdraw.class);
+            startActivity(intent);
+            drawerLayout.closeDrawers();
         });
 
         DatabaseReference msg = FirebaseDatabase.getInstance().getReference("Message");
@@ -277,6 +317,12 @@ public class Home extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+        });
+
+        ImageView task = findViewById(R.id.Spacial_task);
+        task.setOnClickListener(v -> {
+            Intent intent = new Intent(Home.this, Task.class);
+            startActivity(intent);
         });
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -519,19 +565,26 @@ public class Home extends AppCompatActivity {
             try {
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 if (connectivityManager != null) {
-                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                    if (networkInfo != null) {
-                        Class<?> networkInfoClass = networkInfo.getClass();
-                        Field extraInfoField = networkInfoClass.getDeclaredField("extraInfo");
-                        extraInfoField.setAccessible(true);
-                        String extraInfo = (String) extraInfoField.get(networkInfo);
+                    Network activeNetwork = connectivityManager.getActiveNetwork();
+                    NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
 
-                        if (extraInfo != null && extraInfo.contains("private")) {
-                            // Private DNS is set, we cannot directly determine the server
-                            showDnsStatus("Private DNS in use");
+                    if (networkCapabilities != null) {
+                        // Check if the device is connected to the internet
+                        if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+                            // Check if private DNS is being used
+                            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                                // Wi-Fi specific checks
+                                showDnsStatus("Connected over Wi-Fi, using default DNS");
+                            } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                                // Cellular specific checks
+                                showDnsStatus("Connected over mobile network, using default DNS");
+                            } else {
+                                showDnsStatus("Connected, but transport type unknown");
+                            }
                         } else {
-                            // Likely using the provider's DNS server (no private DNS set)
-                            showDnsStatus("Using provider's DNS");
+                            Intent intent = new Intent(this,No_Internet.class);
+                            startActivity(intent);
+                            showDnsStatus("No internet capability on active network");
                         }
                     } else {
                         showDnsStatus("No active network connection");
@@ -539,16 +592,15 @@ public class Home extends AppCompatActivity {
                 } else {
                     showDnsStatus("ConnectivityManager not available");
                 }
-            } catch (IllegalAccessException |
-                     NoSuchFieldException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                // Handle exceptions gracefully (e.g., reflection errors)
                 showDnsStatus("Error determining DNS status");
             }
         } else {
-            // For devices below Android 9, DNS check is not possible using built-in APIs
-            showDnsStatus("DNS check not available on this device version");
+            // For devices below Android 9, DNS check is not available using NetworkCapabilities
+            //showDnsStatus("DNS check not available on this device version");
         }
+
 
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -578,4 +630,45 @@ public class Home extends AppCompatActivity {
         // Update UI to display VPN status (e.g., Toast message, TextView)
         Toast.makeText(this, "VPN: " + message, Toast.LENGTH_SHORT).show();
     }
+
+    private void checkInternetConnectivity(ConnectivityManager connectivityManager) {
+        Network activeNetwork = connectivityManager.getActiveNetwork();
+        if (activeNetwork != null) {
+            NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
+
+            if (networkCapabilities != null && networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+                // Run internet reachability check in background
+                new Thread(() -> {
+                    boolean isInternetReachable = isInternetReachable();
+
+                    // UI update should be done on the main thread
+                    runOnUiThread(() -> {
+                        if (isInternetReachable) {
+                            showDnsStatus("Connected to the internet");
+                        } else {
+                            showDnsStatus("Connected but no internet access");
+                        }
+                    });
+                }).start();
+            } else {
+                runOnUiThread(() -> showDnsStatus("No internet capability on active network"));
+            }
+        } else {
+            runOnUiThread(() -> showDnsStatus("No active network connection"));
+        }
+    }
+
+    // Simulating a real check for internet access (e.g., by pinging a server)
+    private boolean isInternetReachable() {
+        try {
+            // Ping Google DNS to check for internet connectivity
+            Process process = Runtime.getRuntime().exec("/system/bin/ping -c 1 8.8.8.8");
+            int returnVal = process.waitFor();
+            return (returnVal == 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

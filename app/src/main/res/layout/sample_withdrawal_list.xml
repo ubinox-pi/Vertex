@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
-    android:background="@drawable/home"
+    android:background="@drawable/textbox_border"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/calistoga"
         android:text="ID"
-        android:textColor="@android:color/black"
+        android:textColor="@color/primary_text"
         android:textSize="14sp" />
 
     <TextView
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/calistoga"
         android:text="UPI ID"
-        android:textColor="@android:color/black"
+        android:textColor="@color/primary_text"
         android:textSize="14sp" />
 
     <TextView
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/calistoga"
         android:text="Amount"
-        android:textColor="@android:color/black"
+        android:textColor="@color/primary_text"
         android:textSize="14sp" />
 
     <TextView
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/calistoga"
         android:text="Txn ID"
-        android:textColor="@android:color/black"
+        android:textColor="@color/primary_text"
         android:textSize="14sp" />
 
     <TextView
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/calistoga"
         android:text="Date"
-        android:textColor="@android:color/black"
+        android:textColor="@color/primary_text"
         android:textSize="14sp" />
 
     <TextView
@@ -58,6 +58,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/calistoga"
         android:text="Status"
-        android:textColor="@android:color/black"
+        android:textColor="@color/primary_text"
         android:textSize="14sp" />
 </LinearLayout>

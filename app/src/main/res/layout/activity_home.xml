@@ -2,13 +2,14 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    android:id="@+id/drawer"
-    tools:openDrawer="start"
-    tools:context=".Home">
+    android:visibility="visible"
+    tools:context=".Home"
+    tools:openDrawer="start">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -131,7 +132,6 @@
                         <androidx.cardview.widget.CardView
                             android:layout_width="130dp"
                             android:layout_height="130dp"
-                            android:layout_marginRight="5dp"
                             android:background="@drawable/transparany"
                             app:cardCornerRadius="80dp"
                             app:srcCompat="@drawable/transparany">
@@ -141,6 +141,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:scaleType="centerCrop"
+                                android:layout_margin="5dp"
                                 app:srcCompat="@drawable/profile_pic" />
                         </androidx.cardview.widget.CardView>
 
@@ -538,7 +539,7 @@
                                     app:cardUseCompatPadding="true">
 
                                     <ImageView
-                                        android:id="@+id/Spaicial_task"
+                                        android:id="@+id/Spacial_task"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:layout_margin="7dp"
@@ -586,7 +587,7 @@
                                     app:cardUseCompatPadding="true">
 
                                     <ImageView
-                                        android:id="@+id/imageView15"
+                                        android:id="@+id/refer"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:layout_margin="7dp"
@@ -657,19 +658,6 @@
         </ScrollView>
     </LinearLayout>
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animationView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/loadingg" />
-
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="325dp"
@@ -679,4 +667,17 @@
 
         <include layout="@layout/custom_nav" />
     </com.google.android.material.navigation.NavigationView>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loadingg" />
 </androidx.drawerlayout.widget.DrawerLayout>
