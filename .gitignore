@@ -11,6 +11,8 @@
 /build
 /google-services.json
 /captures
+/app/release/baselineProfiles
+/app/release/app-release.apk
 .externalNativeBuild
 .cxx
 local.properties
