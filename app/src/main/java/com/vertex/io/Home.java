@@ -27,6 +27,7 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,7 +42,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
@@ -73,6 +73,7 @@ public class Home extends AppCompatActivity {
     private AdView mAdView;
     private RewardedAd rewardedAd;
     private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
+    pop_dialog popDialog;
 
     private void showPermissionDeniedDialog() {
         new AlertDialog.Builder(this)
@@ -109,9 +110,9 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         TextView em = findViewById(R.id.Gmail_textview);
-        LottieAnimationView animationView = findViewById(R.id.animationView);
         ScrollView scrollView = findViewById(R.id.scroll);
-
+        popDialog = new pop_dialog(this);
+        show_loading();
 
 
         // Register a NetworkCallback to listen for changes in connectivity
@@ -142,19 +143,6 @@ public class Home extends AppCompatActivity {
                 }
             }, filter);
         }
-
-
-
-        // Todo: implement in mainActivity
-
-//        Otp otp = new Otp(context,"9801112671");
-//        otp.setCancelable(false);
-//        otp.getWindow().setBackgroundDrawable(getDrawable(R.drawable.otp));
-//        otp.getWindow().setWindowAnimations(R.style.DialogAnimation);
-//        otp.getWindow().setGravity(Gravity.BOTTOM);
-//        otp.create();
-//        otp.show();
-
         ImageView refer = findViewById(R.id.refer);
         refer.setOnClickListener(v->{
             startActivity(new Intent(this,com.vertex.io.refer.class));
@@ -179,7 +167,7 @@ public class Home extends AppCompatActivity {
                 String text = s.toString().trim();
                 if (!text.isEmpty()) {
                     scrollView.setVisibility(View.VISIBLE);
-                    animationView.setVisibility(View.GONE);
+                    hide_loading();
                 }
             }
 
@@ -187,12 +175,6 @@ public class Home extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
-
-        if (em.getText().toString().isEmpty()) {
-            animationView.setVisibility(View.VISIBLE);
-        } else {
-            animationView.setVisibility(View.GONE);
-        }
 
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -609,6 +591,7 @@ public class Home extends AppCompatActivity {
             if (activeNetwork != null) {
                 NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
                 if (networkCapabilities != null && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+
                     showVpnStatus("VPN is connected");
                 } else {
                     showVpnStatus("VPN is not connected");
@@ -657,7 +640,6 @@ public class Home extends AppCompatActivity {
             runOnUiThread(() -> showDnsStatus("No active network connection"));
         }
     }
-
     // Simulating a real check for internet access (e.g., by pinging a server)
     private boolean isInternetReachable() {
         try {
@@ -670,5 +652,15 @@ public class Home extends AppCompatActivity {
             return false;
         }
     }
-
+    void show_loading(){
+        popDialog.setCancelable(false);
+        popDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.loading_popup));
+        popDialog.getWindow().setWindowAnimations(R.style.popupAnimation);
+        popDialog.getWindow().setGravity(Gravity.CENTER);
+        popDialog.create();
+        popDialog.show();
+    }
+    void hide_loading(){
+        popDialog.dismiss();
+    }
 }

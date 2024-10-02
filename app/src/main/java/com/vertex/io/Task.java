@@ -2,6 +2,10 @@ package com.vertex.io;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,11 +29,14 @@ public class Task extends AppCompatActivity {
     FirebaseDatabase mDatabase;
     DatabaseReference mReference;
 
+    pop_dialog popDialog;
+
     private DatabaseReference databaseReference;
-    private ListView taskListView;
+    private ListView taskListView,list_pending,list_completed;
     private AllTaskAdapter taskAdapter;
     private ArrayList<AllTaskData> taskList = new ArrayList<>();
 
+    Animation slide_left_in, slide_right_in,slide_right_out,slide_left_out;
 
     String UID;
 
@@ -42,6 +49,10 @@ public class Task extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
+        popDialog = new pop_dialog(this);
+
+        showDialog();
+
         mAuth = FirebaseAuth.getInstance();
         UID = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
         mDatabase = FirebaseDatabase.getInstance();
@@ -51,7 +62,13 @@ public class Task extends AppCompatActivity {
         complete = findViewById(R.id.completed);
         taskAll = findViewById(R.id.allTask);
         taskListView = findViewById(R.id.lists_allTask);
-        //listView = findViewById(R.id.lists_allTask);
+        list_pending = findViewById(R.id.lists_pending);
+        list_completed = findViewById(R.id.lists_completed);
+
+        slide_left_in = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_left);
+        slide_right_in = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_right);
+        slide_right_out = AnimationUtils.loadAnimation(this, R.anim.slide_out_to_right);
+        slide_left_out = AnimationUtils.loadAnimation(this, R.anim.slide_out_to_left);
 
 
         taskListView.setOnItemClickListener((parent, view, position, id) ->{
@@ -89,6 +106,12 @@ public class Task extends AppCompatActivity {
         });
 
         taskAll.setOnClickListener(v->{
+            if (taskListView.getVisibility() != View.VISIBLE) {
+                taskListView.setVisibility(View.VISIBLE);
+                taskListView.startAnimation(slide_left_in);
+                list_pending.setVisibility(View.GONE);
+                list_completed.setVisibility(View.GONE);
+            }
             taskAll.setBackground(AppCompatResources.getDrawable(this,R.color.secondry_bg));
             pending.setBackground(AppCompatResources.getDrawable(this,R.drawable.bg_app));
             complete.setBackground(AppCompatResources.getDrawable(this,R.drawable.bg_app));
@@ -97,6 +120,20 @@ public class Task extends AppCompatActivity {
             complete.setTextColor(getResources().getColor(R.color.primary_text));
         });
         pending.setOnClickListener(v->{
+            if (list_pending.getVisibility() != View.VISIBLE){
+                if (taskListView.getVisibility() == View.VISIBLE)
+                {
+                    taskListView.setVisibility(View.GONE);
+                    list_pending.setVisibility(View.VISIBLE);
+                    list_pending.startAnimation(slide_right_in);
+                } else if (list_completed.getVisibility() == View.VISIBLE)
+                {
+                    list_completed.setVisibility(View.GONE);
+                    list_pending.setVisibility(View.VISIBLE);
+                    list_pending.startAnimation(slide_left_in);
+                }
+            }
+
             pending.setBackground(AppCompatResources.getDrawable(this,R.color.secondry_bg));
             taskAll.setBackground(AppCompatResources.getDrawable(this,R.drawable.bg_app));
             complete.setBackground(AppCompatResources.getDrawable(this,R.drawable.bg_app));
@@ -105,6 +142,12 @@ public class Task extends AppCompatActivity {
             complete.setTextColor(getResources().getColor(R.color.primary_text));
         });
         complete.setOnClickListener(v->{
+            if (list_completed.getVisibility() != View.VISIBLE){
+                list_completed.setVisibility(View.VISIBLE);
+                list_completed.startAnimation(slide_right_in);
+                list_pending.setVisibility(View.GONE);
+                taskListView.setVisibility(View.GONE);
+            }
             complete.setBackground(AppCompatResources.getDrawable(this,R.color.secondry_bg));
             pending.setBackground(AppCompatResources.getDrawable(this,R.drawable.bg_app));
             taskAll.setBackground(AppCompatResources.getDrawable(this,R.drawable.bg_app));
@@ -120,6 +163,8 @@ public class Task extends AppCompatActivity {
         // Initialize ListView and set up the custom TaskAdapter
         taskAdapter = new AllTaskAdapter(this, taskList);
         taskListView.setAdapter(taskAdapter);
+        list_completed.setAdapter(taskAdapter);
+        list_pending.setAdapter(taskAdapter);
 
         // Fetch Data from Firebase
         fetchTaskData();
@@ -144,7 +189,8 @@ public class Task extends AppCompatActivity {
                         }
                     }
                 }
-                taskAdapter.notifyDataSetChanged();  // Notify adapter to update the UI
+                taskAdapter.notifyDataSetChanged();// Notify adapter to update the UI
+                hideDialog();
             }
 
             @Override
@@ -153,5 +199,17 @@ public class Task extends AppCompatActivity {
                 Toast.makeText(Task.this, "Failed to load tasks", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    void showDialog(){
+        popDialog.setCancelable(false);
+        popDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.loading_popup));
+        popDialog.getWindow().setWindowAnimations(R.style.popupAnimation);
+        popDialog.getWindow().setGravity(Gravity.CENTER);
+        popDialog.create();
+        popDialog.show();
+    }
+    void hideDialog(){
+        popDialog.dismiss();
     }
 }
