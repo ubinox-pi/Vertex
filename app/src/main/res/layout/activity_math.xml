@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_app"
+    android:padding="10dp"
     tools:context=".MainActivity">
 
 
@@ -11,8 +13,6 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="5dp"
-        android:background="@drawable/home"
         android:gravity="center|top"
         android:orientation="vertical"
         ads:layout_constraintBottom_toBottomOf="parent"
@@ -20,80 +20,99 @@
         ads:layout_constraintStart_toStartOf="parent"
         ads:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/Reward"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/calistoga"
-            android:text="Answer question correctly and get rewarded"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|top"
+            android:fillViewport="true"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center|top"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/Reward_rule"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="2dp"
-            android:fontFamily="@font/calistoga"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/Reward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/calistoga"
+                    android:text="Answer question correctly and get rewarded"
+                    android:textColor="@color/primary_text"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/Reward_rule"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/calistoga"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/number1TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Number1"
-            android:textSize="24sp" />
+                <TextView
+                    android:id="@+id/number1TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Number1"
+                    android:textColor="@color/primary_text"
+                    android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/operatorTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="+"
-            android:textSize="24sp" />
+                <TextView
+                    android:id="@+id/operatorTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="+"
+                    android:textColor="@color/primary_text"
+                    android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/number2TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Number2"
-            android:textSize="24sp" />
+                <TextView
+                    android:id="@+id/number2TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Number2"
+                    android:textColor="@color/primary_text"
+                    android:textSize="24sp" />
 
-        <EditText
-            android:id="@+id/answerEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="Enter your answer"
-            android:inputType="number"
-            android:padding="10dp" />
+                <EditText
+                    android:id="@+id/answerEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="Enter your answer"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:textColor="@color/secondary_text"
+                    android:textColorHint="@color/secondary_text" />
 
-        <Button
-            android:id="@+id/submitButton"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/round_btn"
-            android:fontFamily="@font/font"
-            android:text="Submit"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
+                <Button
+                    android:id="@+id/submitButton"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/round_btn"
+                    android:fontFamily="@font/calistoga"
+                    android:text="Submit"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/Timer"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:fontFamily="@font/calistoga"
-            android:gravity="center"
-            android:text="11"
-            android:textSize="65sp" />
+                <TextView
+                    android:id="@+id/Timer"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:fontFamily="@font/calistoga"
+                    android:gravity="center"
+                    android:text="11"
+                    android:textColor="@color/primary_text"
+                    android:textSize="65sp" />
+            </LinearLayout>
+        </ScrollView>
 
 
     </LinearLayout>
@@ -107,6 +126,7 @@
         ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
         ads:layout_constraintBottom_toBottomOf="parent"
         ads:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/bg_app"
         ads:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,10 +31,13 @@ public class Task extends AppCompatActivity {
 
     pop_dialog popDialog;
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference,databaseReference2;
     private ListView taskListView,list_pending,list_completed;
     private AllTaskAdapter taskAdapter;
+    private pending_list_adapter pendingAdapter,completedAdapter;
     private ArrayList<AllTaskData> taskList = new ArrayList<>();
+    private ArrayList<pending_list_data> pendingList = new ArrayList<>();
+    private ArrayList<pending_list_data> completedList = new ArrayList<>();
 
     Animation slide_left_in, slide_right_in,slide_right_out,slide_left_out;
 
@@ -133,7 +136,6 @@ public class Task extends AppCompatActivity {
                     list_pending.startAnimation(slide_left_in);
                 }
             }
-
             pending.setBackground(AppCompatResources.getDrawable(this,R.color.secondry_bg));
             taskAll.setBackground(AppCompatResources.getDrawable(this,R.drawable.bg_app));
             complete.setBackground(AppCompatResources.getDrawable(this,R.drawable.bg_app));
@@ -159,15 +161,20 @@ public class Task extends AppCompatActivity {
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference("AllTask");
+        databaseReference2 = FirebaseDatabase.getInstance().getReference("Users").child(UID).child("spacialTask");
 
         // Initialize ListView and set up the custom TaskAdapter
         taskAdapter = new AllTaskAdapter(this, taskList);
         taskListView.setAdapter(taskAdapter);
-        list_completed.setAdapter(taskAdapter);
-        list_pending.setAdapter(taskAdapter);
+        pendingAdapter = new pending_list_adapter(this,pendingList);
+        completedAdapter = new pending_list_adapter(this,completedList);
+        list_completed.setAdapter(completedAdapter);
+        list_pending.setAdapter(pendingAdapter);
 
         // Fetch Data from Firebase
         fetchTaskData();
+        fetchTaskData2();
+        fetchTaskData3();
 
 
     }
@@ -186,6 +193,65 @@ public class Task extends AppCompatActivity {
                     {
                         if (task.isVisible) {  // Check if task is visible
                             taskList.add(task);  // Add only visible tasks  to the list
+                        }
+                    }
+                }
+                taskAdapter.notifyDataSetChanged();// Notify adapter to update the UI
+                hideDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle error (if any)
+                Toast.makeText(Task.this, "Failed to load tasks", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchTaskData2() {
+        databaseReference2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                pendingList.clear();  // Clear the list before adding new data
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    pending_list_data task = snapshot.getValue(pending_list_data.class);
+                    task.setIsPending(snapshot.child("status").getValue(Boolean.class));
+//                    taskList.add(task);
+//                    Toast.makeText(Task.this,String.valueOf(task.isVisible()),Toast.LENGTH_LONG).show();
+                    if(task != null)
+                    {
+                        if (task.isPending) {  // Check if task is visible
+                            pendingList.add(task);  // Add only visible tasks  to the list
+                        }
+                    }
+                }
+                taskAdapter.notifyDataSetChanged();// Notify adapter to update the UI
+                hideDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle error (if any)
+                Toast.makeText(Task.this, "Failed to load tasks", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void fetchTaskData3() {
+        databaseReference2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                completedList.clear();  // Clear the list before adding new data
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    pending_list_data task = snapshot.getValue(pending_list_data.class);
+                    task.setIsPending(snapshot.child("status").getValue(Boolean.class));
+//                    taskList.add(task);
+//                    Toast.makeText(Task.this,String.valueOf(task.isVisible()),Toast.LENGTH_LONG).show();
+                    if(task != null)
+                    {
+                        if (!task.isPending) {  // Check if task is visible
+                            completedList.add(task);  // Add only visible tasks  to the list
                         }
                     }
                 }

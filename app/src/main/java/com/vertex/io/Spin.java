@@ -1,7 +1,11 @@
 package com.vertex.io;
 
+import static android.content.ContentValues.TAG;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -14,6 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,6 +38,33 @@ import java.util.Random;
 
 public class Spin extends AppCompatActivity {
 
+    pop_dialog popDialog;
+    private RewardedAd rewardedAd;
+    Context context;
+
+
+
+    public void adRewd(){
+        AdRequest req = new AdRequest.Builder().build();
+        RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917",
+                req, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        Log.d(TAG, loadAdError.toString());
+                        Toast.makeText(context, "Ad not available yet. Please try again later.", Toast.LENGTH_SHORT).show();
+                        rewardedAd = null;
+                        adRewd();
+                    }
+
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd ad) {
+                        rewardedAd = ad;
+                        Log.d(TAG, "Ad was loaded.");
+                        dismiss();
+                    }
+                });
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +72,10 @@ public class Spin extends AppCompatActivity {
         setContentView(R.layout.activity_spin);
 
         //Todo: have to implement advertisement
+        popDialog = new pop_dialog(Spin.this);
+        adRewd();
+        loading();
+        context = Spin.this;
 
         displayPoints();
         androidx.appcompat.widget.Toolbar actionBar = findViewById(R.id.action);
@@ -159,378 +198,385 @@ public class Spin extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                int finalDegrees = Math.round(imageView.getRotation());
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                String UID = mAuth.getCurrentUser().getUid().toString();
-                DatabaseReference User = FirebaseDatabase.getInstance().getReference("Users").child(UID);
-                if(finalDegrees == 0)
-                {
-                    User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            double amount = snapshot.getValue(double.class);
-                            amount = amount+1;
-                            User.child("coin").setValue(amount).addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            int spin = snapshot.getValue(int.class);
-                                            spin = spin-1;
-                                            User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
-                                                if (task1.isSuccessful())
-                                                {
-                                                    Toast.makeText(Spin.this, "You Won 1 Coin", Toast.LENGTH_SHORT).show();
-                                                    Button spin1 = findViewById(R.id.Spin);
-                                                    spin1.setEnabled(true);
-                                                    spin1.setBackgroundResource(R.drawable.round_btn);
+                if (rewardedAd != null) {
+                    rewardedAd.show(Spin.this, rewardItem -> {
+                        int finalDegrees = Math.round(imageView.getRotation());
+                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                        String UID = mAuth.getCurrentUser().getUid().toString();
+                        DatabaseReference User = FirebaseDatabase.getInstance().getReference("Users").child(UID);
+                        if(finalDegrees == 0)
+                        {
+                            User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    double amount = snapshot.getValue(double.class);
+                                    amount = amount+1;
+                                    User.child("coin").setValue(amount).addOnCompleteListener(task -> {
+                                        if (task.isSuccessful())
+                                        {
+                                            User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    int spin = snapshot.getValue(int.class);
+                                                    spin = spin-1;
+                                                    User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful())
+                                                        {
+                                                            Toast.makeText(Spin.this, "You Won 1 Coin", Toast.LENGTH_SHORT).show();
+                                                            Button spin1 = findViewById(R.id.Spin);
+                                                            spin1.setEnabled(true);
+                                                            spin1.setBackgroundResource(R.drawable.round_btn);
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
                                                 }
                                             });
                                         }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
                                     });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
                                 }
                             });
                         }
+                        else if (finalDegrees == 45)
+                        {
+                            User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    double amount = snapshot.getValue(double.class);
+                                    amount = amount+0;
+                                    User.child("coin").setValue(amount).addOnCompleteListener(task -> {
+                                        if (task.isSuccessful())
+                                        {
+                                            User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    int spin = snapshot.getValue(int.class);
+                                                    spin = spin-1;
+                                                    User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful())
+                                                        {
+                                                            Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
+                                                            Button spin1 = findViewById(R.id.Spin);
+                                                            spin1.setEnabled(true);
+                                                            spin1.setBackgroundResource(R.drawable.round_btn);
+                                                        }
+                                                    });
+                                                }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
 
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                        else if (finalDegrees ==90)
+                        {
+                            User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    double amount = snapshot.getValue(double.class);
+                                    amount = amount+2;
+                                    User.child("coin").setValue(amount).addOnCompleteListener(task -> {
+                                        if (task.isSuccessful())
+                                        {
+                                            User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    int spin = snapshot.getValue(int.class);
+                                                    spin = spin-1;
+                                                    User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful())
+                                                        {
+                                                            Toast.makeText(Spin.this, "You Won 2 Coin", Toast.LENGTH_SHORT).show();
+                                                            Button spin1 = findViewById(R.id.Spin);
+                                                            spin1.setEnabled(true);
+                                                            spin1.setBackgroundResource(R.drawable.round_btn);
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                        else if (finalDegrees == 135)
+                        {
+                            User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    double amount = snapshot.getValue(double.class);
+                                    amount = amount+3;
+                                    User.child("coin").setValue(amount).addOnCompleteListener(task -> {
+                                        if (task.isSuccessful())
+                                        {
+                                            User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    int spin = snapshot.getValue(int.class);
+                                                    spin = spin-1;
+                                                    User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful())
+                                                        {
+                                                            Toast.makeText(Spin.this, "You Won 3 Coin", Toast.LENGTH_SHORT).show();
+                                                            Button spin1 = findViewById(R.id.Spin);
+                                                            spin1.setEnabled(true);
+                                                            spin1.setBackgroundResource(R.drawable.round_btn);
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                        else if (finalDegrees == 180)
+                        {
+                            User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    double amount = snapshot.getValue(double.class);
+                                    amount = amount+0;
+                                    User.child("coin").setValue(amount).addOnCompleteListener(task -> {
+                                        if (task.isSuccessful())
+                                        {
+                                            User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    int spin = snapshot.getValue(int.class);
+                                                    spin = spin-1;
+                                                    User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful())
+                                                        {
+                                                            Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
+                                                            Button spin1 = findViewById(R.id.Spin);
+                                                            spin1.setEnabled(true);
+                                                            spin1.setBackgroundResource(R.drawable.round_btn);
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                        else if (finalDegrees == 225)
+                        {
+                            User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    double amount = snapshot.getValue(double.class);
+                                    amount = amount+2;
+                                    User.child("coin").setValue(amount).addOnCompleteListener(task -> {
+                                        if (task.isSuccessful())
+                                        {
+                                            User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    int spin = snapshot.getValue(int.class);
+                                                    spin = spin-1;
+                                                    User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful())
+                                                        {
+                                                            Toast.makeText(Spin.this, "You Won 2 Coin", Toast.LENGTH_SHORT).show();
+                                                            Button spin1 = findViewById(R.id.Spin);
+                                                            spin1.setEnabled(true);
+                                                            spin1.setBackgroundResource(R.drawable.round_btn);
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                        else if (finalDegrees == 270 )
+                        {
+                            User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    double amount = snapshot.getValue(double.class);
+                                    amount = amount+0;
+                                    User.child("coin").setValue(amount).addOnCompleteListener(task -> {
+                                        if (task.isSuccessful())
+                                        {
+                                            User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    int spin = snapshot.getValue(int.class);
+                                                    spin = spin-1;
+                                                    User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful())
+                                                        {
+                                                            Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
+                                                            Button spin1 = findViewById(R.id.Spin);
+                                                            spin1.setEnabled(true);
+                                                            spin1.setBackgroundResource(R.drawable.round_btn);
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                        else if (finalDegrees == 315)
+                        {
+                            User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    double amount = snapshot.getValue(double.class);
+                                    amount = amount+1;
+                                    User.child("coin").setValue(amount).addOnCompleteListener(task -> {
+                                        if (task.isSuccessful())
+                                        {
+                                            User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    int spin = snapshot.getValue(int.class);
+                                                    spin = spin-1;
+                                                    User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful())
+                                                        {
+                                                            Toast.makeText(Spin.this, "You Won 1 Coin", Toast.LENGTH_SHORT).show();
+                                                            Button spin1 = findViewById(R.id.Spin);
+                                                            spin1.setEnabled(true);
+                                                            spin1.setBackgroundResource(R.drawable.round_btn);
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                        else
+                        {
+                            User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    double amount = snapshot.getValue(double.class);
+                                    amount = amount+0;
+                                    User.child("coin").setValue(amount).addOnCompleteListener(task -> {
+                                        if (task.isSuccessful())
+                                        {
+                                            User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    int spin = snapshot.getValue(int.class);
+                                                    spin = spin-1;
+                                                    User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful())
+                                                        {
+                                                            Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
+                                                            Button spin1 = findViewById(R.id.Spin);
+                                                            spin1.setEnabled(true);
+                                                            spin1.setBackgroundResource(R.drawable.round_btn);
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
                     });
                 }
-                else if (finalDegrees == 45)
-                {
-                    User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            double amount = snapshot.getValue(double.class);
-                            amount = amount+0;
-                            User.child("coin").setValue(amount).addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            int spin = snapshot.getValue(int.class);
-                                            spin = spin-1;
-                                            User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
-                                                if (task1.isSuccessful())
-                                                {
-                                                    Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
-                                                    Button spin1 = findViewById(R.id.Spin);
-                                                    spin1.setEnabled(true);
-                                                    spin1.setBackgroundResource(R.drawable.round_btn);
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-                else if (finalDegrees ==90)
-                {
-                    User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            double amount = snapshot.getValue(double.class);
-                            amount = amount+2;
-                            User.child("coin").setValue(amount).addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            int spin = snapshot.getValue(int.class);
-                                            spin = spin-1;
-                                            User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
-                                                if (task1.isSuccessful())
-                                                {
-                                                    Toast.makeText(Spin.this, "You Won 2 Coin", Toast.LENGTH_SHORT).show();
-                                                    Button spin1 = findViewById(R.id.Spin);
-                                                    spin1.setEnabled(true);
-                                                    spin1.setBackgroundResource(R.drawable.round_btn);
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-                else if (finalDegrees == 135)
-                {
-                    User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            double amount = snapshot.getValue(double.class);
-                            amount = amount+3;
-                            User.child("coin").setValue(amount).addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            int spin = snapshot.getValue(int.class);
-                                            spin = spin-1;
-                                            User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
-                                                if (task1.isSuccessful())
-                                                {
-                                                    Toast.makeText(Spin.this, "You Won 3 Coin", Toast.LENGTH_SHORT).show();
-                                                    Button spin1 = findViewById(R.id.Spin);
-                                                    spin1.setEnabled(true);
-                                                    spin1.setBackgroundResource(R.drawable.round_btn);
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-                else if (finalDegrees == 180)
-                {
-                    User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            double amount = snapshot.getValue(double.class);
-                            amount = amount+0;
-                            User.child("coin").setValue(amount).addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            int spin = snapshot.getValue(int.class);
-                                            spin = spin-1;
-                                            User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
-                                                if (task1.isSuccessful())
-                                                {
-                                                    Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
-                                                    Button spin1 = findViewById(R.id.Spin);
-                                                    spin1.setEnabled(true);
-                                                    spin1.setBackgroundResource(R.drawable.round_btn);
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-                else if (finalDegrees == 225)
-                {
-                    User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            double amount = snapshot.getValue(double.class);
-                            amount = amount+2;
-                            User.child("coin").setValue(amount).addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            int spin = snapshot.getValue(int.class);
-                                            spin = spin-1;
-                                            User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
-                                                if (task1.isSuccessful())
-                                                {
-                                                    Toast.makeText(Spin.this, "You Won 2 Coin", Toast.LENGTH_SHORT).show();
-                                                    Button spin1 = findViewById(R.id.Spin);
-                                                    spin1.setEnabled(true);
-                                                    spin1.setBackgroundResource(R.drawable.round_btn);
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-                else if (finalDegrees == 270 )
-                {
-                    User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            double amount = snapshot.getValue(double.class);
-                            amount = amount+0;
-                            User.child("coin").setValue(amount).addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            int spin = snapshot.getValue(int.class);
-                                            spin = spin-1;
-                                            User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
-                                                if (task1.isSuccessful())
-                                                {
-                                                    Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
-                                                    Button spin1 = findViewById(R.id.Spin);
-                                                    spin1.setEnabled(true);
-                                                    spin1.setBackgroundResource(R.drawable.round_btn);
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-                else if (finalDegrees == 315)
-                {
-                    User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            double amount = snapshot.getValue(double.class);
-                            amount = amount+1;
-                            User.child("coin").setValue(amount).addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            int spin = snapshot.getValue(int.class);
-                                            spin = spin-1;
-                                            User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
-                                                if (task1.isSuccessful())
-                                                {
-                                                    Toast.makeText(Spin.this, "You Won 1 Coin", Toast.LENGTH_SHORT).show();
-                                                    Button spin1 = findViewById(R.id.Spin);
-                                                    spin1.setEnabled(true);
-                                                    spin1.setBackgroundResource(R.drawable.round_btn);
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-                else
-                {
-                    User.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            double amount = snapshot.getValue(double.class);
-                            amount = amount+0;
-                            User.child("coin").setValue(amount).addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    User.child("spin").child("spinTask").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            int spin = snapshot.getValue(int.class);
-                                            spin = spin-1;
-                                            User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
-                                                if (task1.isSuccessful())
-                                                {
-                                                    Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
-                                                    Button spin1 = findViewById(R.id.Spin);
-                                                    spin1.setEnabled(true);
-                                                    spin1.setBackgroundResource(R.drawable.round_btn);
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+                else {
+                    Toast.makeText(Spin.this, "Reward not available this time please come back later", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -563,6 +609,19 @@ public class Spin extends AppCompatActivity {
                 Log.e("", "Failed to read value.", error.toException());
             }
         });
+    }
+
+    public void loading(){
+        popDialog.setCancelable(false);
+        popDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.loading_popup));
+        popDialog.getWindow().setWindowAnimations(R.style.popupAnimation);
+        popDialog.getWindow().setGravity(Gravity.CENTER);
+        popDialog.create();
+        popDialog.show();
+    }
+
+    public void dismiss(){
+        popDialog.dismiss();
     }
 
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app"
+    android:fillViewport="true"
+    tools:context=".privacy_policy">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|top"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vertex"
+            android:textSize="50sp"
+            android:textStyle="bold|italic"
+            android:fontFamily="@font/calistoga"
+            android:layout_marginBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:textColor="@color/primary_text"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QuantumLeap Tech Solutions"
+            android:textColor="@color/primary_text"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/calistoga"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/textbox_border"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Privacy Policy"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/calistoga"
+            android:layout_marginBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:textColor="@color/primary_text"/>
+        <TextView
+            android:id="@+id/privacy_policy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|start"
+            android:text="privacy policy"
+            android:textSize="20sp"
+            android:textColor="@color/primary_text"
+            android:fontFamily="@font/calistoga"
+            android:layout_marginBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"/>
+
+    </LinearLayout>
+
+
+</ScrollView>

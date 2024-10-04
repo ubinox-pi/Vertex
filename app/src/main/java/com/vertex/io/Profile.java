@@ -149,6 +149,7 @@ public class Profile extends AppCompatActivity {
             }
         });
 
+        @SuppressLint("Uncheacked warning")
         ImageView profile = findViewById(R.id.Profile);
         profile.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK);

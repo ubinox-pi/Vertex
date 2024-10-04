@@ -174,18 +174,24 @@ public class Scratch extends AppCompatActivity {
         scratch.child("scratch").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                leftTextView.setText(String.valueOf(snapshot.getValue(Integer.class)));
-                if (Integer.parseInt(leftTextView.getText().toString())==0)
+                if (snapshot.exists())
                 {
-                    new AlertDialog.Builder(context)
-                            .setTitle("Sorry!")
-                            .setMessage("You have used all your scratches.")
-                            .setPositiveButton("OK", (dialog, which) -> {
-                                finish();
-                            })
-                            .setCancelable(false)
-                            .create()
-                            .show();;
+                    leftTextView.setText(String.valueOf(snapshot.getValue(Integer.class)));
+                    if (Integer.parseInt(leftTextView.getText().toString())==0)
+                    {
+                        new AlertDialog.Builder(context)
+                                .setTitle("Sorry!")
+                                .setMessage("You have used all your scratches.")
+                                .setPositiveButton("OK", (dialog, which) -> {
+                                    finish();
+                                })
+                                .setCancelable(false)
+                                .create()
+                                .show();;
+                    }
+                }
+                else {
+                    leftTextView.setText("10");
                 }
             }
 

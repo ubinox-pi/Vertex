@@ -134,6 +134,7 @@
                             android:layout_height="130dp"
                             android:background="@drawable/transparany"
                             app:cardCornerRadius="80dp"
+                            app:cardElevation="0dp"
                             app:srcCompat="@drawable/transparany">
 
                             <ImageView
@@ -141,7 +142,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:scaleType="centerCrop"
-                                android:layout_margin="5dp"
                                 app:srcCompat="@drawable/profile_pic" />
                         </androidx.cardview.widget.CardView>
 
@@ -664,7 +664,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:visibility="visible">
-
         <include layout="@layout/custom_nav" />
     </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>

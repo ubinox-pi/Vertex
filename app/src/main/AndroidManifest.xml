@@ -26,6 +26,24 @@
         android:theme="@style/Theme.Vertex"
         tools:targetApi="34">
         <activity
+            android:name=".faq"
+            android:exported="false" />
+        <activity
+            android:name=".ContactUs"
+            android:exported="false" />
+        <activity
+            android:name=".about_us"
+            android:exported="false" />
+        <activity
+            android:name=".terms_and_conditions"
+            android:exported="false" />
+        <activity
+            android:name=".privacy_policy"
+            android:exported="false" />
+        <activity
+            android:name=".vpn"
+            android:exported="false" />
+        <activity
             android:name=".information"
             android:exported="false" />
         <activity

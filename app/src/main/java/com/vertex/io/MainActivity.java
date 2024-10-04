@@ -350,6 +350,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 if (text_pass.getText() != null)
                 {
+                    loading();
                     mFirebaseAuth.signInWithEmailAndPassword(text_email.getText().toString().toLowerCase(),text_pass.getText().toString().trim())
                             .addOnCompleteListener(MainActivity.this,task -> {
                                 if (task.isSuccessful())
@@ -357,6 +358,8 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.makeText(MainActivity.this,"Sign In Success" +task.getException() , Toast.LENGTH_SHORT).show();
                                     Intent intent =  new Intent(MainActivity.this, Home.class);
                                     startActivity(intent);
+                                    loading_cancel();
+                                    finish();
                                 }
                                 else
                                 {
@@ -616,4 +619,5 @@ public class MainActivity extends AppCompatActivity {
 
         });
     }
+
 }

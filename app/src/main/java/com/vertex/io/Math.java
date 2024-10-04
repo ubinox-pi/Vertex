@@ -1,23 +1,16 @@
 package com.vertex.io;
 
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spanned;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
 import androidx.core.text.HtmlCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.viewbinding.BuildConfig;
 
 import com.google.android.gms.ads.AdRequest;
@@ -26,8 +19,6 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

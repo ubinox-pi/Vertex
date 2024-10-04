@@ -65,7 +65,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-
 public class Home extends AppCompatActivity {
 
 
@@ -238,6 +237,31 @@ public class Home extends AppCompatActivity {
         wallet.setOnClickListener(a ->{
             Toast.makeText(context, "Wallet", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Home.this, Withdraw.class);
+            startActivity(intent);
+            drawerLayout.closeDrawers();
+        });
+        privacy.setOnClickListener(a ->{
+            Intent intent = new Intent(Home.this, privacy_policy.class);
+            startActivity(intent);
+            drawerLayout.closeDrawers();
+        });
+        terms_and_condition.setOnClickListener(v->{
+            Intent intent = new Intent(Home.this, terms_and_conditions.class);
+            startActivity(intent);
+            drawerLayout.closeDrawers();
+        });
+        about_us.setOnClickListener(v->{
+            Intent intent = new Intent(Home.this, about_us.class);
+            startActivity(intent);
+            drawerLayout.closeDrawers();
+        });
+        contact_us.setOnClickListener(v->{
+            Intent intent = new Intent(Home.this, ContactUs.class);
+            startActivity(intent);
+            drawerLayout.closeDrawers();
+        });
+        faqs.setOnClickListener(v->{
+            Intent intent = new Intent(Home.this, faq.class);
             startActivity(intent);
             drawerLayout.closeDrawers();
         });
@@ -499,9 +523,6 @@ public class Home extends AppCompatActivity {
                 });
     }
 
-
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -528,8 +549,7 @@ public class Home extends AppCompatActivity {
         File local = new File(directory,"imageFile");
         ImageView profile_pic = findViewById(R.id.Profile_pics);
         if (local.exists()) {
-            File imageFile = local;
-            Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+            Bitmap bitmap = BitmapFactory.decodeFile(local.getAbsolutePath());
             profile_pic.setImageBitmap(bitmap);
         }
 
@@ -543,65 +563,8 @@ public class Home extends AppCompatActivity {
 
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            try {
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                if (connectivityManager != null) {
-                    Network activeNetwork = connectivityManager.getActiveNetwork();
-                    NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
-
-                    if (networkCapabilities != null) {
-                        // Check if the device is connected to the internet
-                        if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-                            // Check if private DNS is being used
-                            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                                // Wi-Fi specific checks
-                                showDnsStatus("Connected over Wi-Fi, using default DNS");
-                            } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                                // Cellular specific checks
-                                showDnsStatus("Connected over mobile network, using default DNS");
-                            } else {
-                                showDnsStatus("Connected, but transport type unknown");
-                            }
-                        } else {
-                            Intent intent = new Intent(this,No_Internet.class);
-                            startActivity(intent);
-                            showDnsStatus("No internet capability on active network");
-                        }
-                    } else {
-                        showDnsStatus("No active network connection");
-                    }
-                } else {
-                    showDnsStatus("ConnectivityManager not available");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                showDnsStatus("Error determining DNS status");
-            }
-        } else {
-            // For devices below Android 9, DNS check is not available using NetworkCapabilities
-            //showDnsStatus("DNS check not available on this device version");
-        }
-
-
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            Network activeNetwork = connectivityManager.getActiveNetwork();
-            if (activeNetwork != null) {
-                NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
-                if (networkCapabilities != null && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
-
-                    showVpnStatus("VPN is connected");
-                } else {
-                    showVpnStatus("VPN is not connected");
-                }
-            } else {
-                showVpnStatus("No active network connection");
-            }
-        } else {
-            showVpnStatus("ConnectivityManager is not available");
-        }
+        Dns_check();
+        Vpn_check();
     }
 
     private void showDnsStatus(String message) {
@@ -627,9 +590,9 @@ public class Home extends AppCompatActivity {
                     // UI update should be done on the main thread
                     runOnUiThread(() -> {
                         if (isInternetReachable) {
-                            showDnsStatus("Connected to the internet");
+                            //showDnsStatus("Connected to the internet");
                         } else {
-                            showDnsStatus("Connected but no internet access");
+                            //showDnsStatus("Connected but no internet access");
                         }
                     });
                 }).start();
@@ -662,5 +625,87 @@ public class Home extends AppCompatActivity {
     }
     void hide_loading(){
         popDialog.dismiss();
+    }
+
+    private void Dns(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("DNS Connected");
+        builder.setMessage("In order to use this app you must use default DNS. Please disconnect the private DNS come again.");
+        builder.setPositiveButton("Ok", (dialog, which) -> finishAffinity());
+        builder.setCancelable(false);
+        builder.create().show();
+    }
+
+    void Dns_check(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            try {
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                if (connectivityManager != null) {
+                    Network activeNetwork = connectivityManager.getActiveNetwork();
+                    NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
+
+                    if (networkCapabilities != null) {
+                        // Check if the device is connected to the internet
+                        if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+                            // Retrieve Private DNS status
+                            String privateDnsSetting = Settings.Global.getString(getContentResolver(), "private_dns_mode");
+                            String privateDnsSpecifier = Settings.Global.getString(getContentResolver(), "private_dns_specifier");
+
+                            if ("hostname".equals(privateDnsSetting) && privateDnsSpecifier != null) {
+                                Dns(Home.this);
+                                //showDnsStatus("Connected, using Private DNS: " + privateDnsSpecifier);
+                            } else if ("opportunistic".equals(privateDnsSetting)) {
+                                //showDnsStatus("Connected, using Opportunistic DNS (default DNS)");
+                            } else {
+                                // Wi-Fi and Cellular-specific checks
+                                if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                                    //showDnsStatus("Connected over Wi-Fi, using default DNS");
+                                } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                                    //showDnsStatus("Connected over mobile network, using default DNS");
+                                } else {
+                                    //showDnsStatus("Connected, but transport type unknown");
+                                }
+                            }
+                        } else {
+//                            Intent intent = new Intent(this, No_Internet.class);
+//                            startActivity(intent);
+//                            showDnsStatus("No internet capability on active network");
+                        }
+                    } else {
+                        //showDnsStatus("No active network connection");
+                    }
+                } else {
+                    //showDnsStatus("ConnectivityManager not available");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                //showDnsStatus("Error determining DNS status");
+            }
+        } else {
+            // For devices below Android 9, DNS check is not available using NetworkCapabilities
+            //showDnsStatus("DNS check not available on this device version");
+        }
+
+    }
+
+    void Vpn_check(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            Network activeNetwork = connectivityManager.getActiveNetwork();
+            if (activeNetwork != null) {
+                NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
+                if (networkCapabilities != null && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+
+                    Intent intent = new Intent(Home.this, vpn.class);
+                    startActivity(intent);
+                } else {
+                    //showVpnStatus("VPN is not connected");
+                }
+            } else {
+                //showVpnStatus("No active network connection");
+            }
+        } else {
+            //showVpnStatus("ConnectivityManager is not available");
+        }
     }
 }
