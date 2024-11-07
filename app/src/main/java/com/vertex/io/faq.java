@@ -2,6 +2,8 @@ package com.vertex.io;
 
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +25,8 @@ public class faq extends AppCompatActivity {
     DatabaseReference databaseReference;
     pop_dialog popDialog;
 
+    LinearLayout layout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +34,8 @@ public class faq extends AppCompatActivity {
         popDialog = new pop_dialog(this);
         loading();
         databaseReference = FirebaseDatabase.getInstance().getReference("FAQ");
+        layout = findViewById(R.id.points_layout);
+        layout.setVisibility(View.INVISIBLE);
 
         RecyclerView faqRecyclerView = findViewById(R.id.faqRecyclerView);
 
@@ -54,6 +60,10 @@ public class faq extends AppCompatActivity {
 
             }
         });
+
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.arrow_back);
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         FAQAdapter faqAdapter = new FAQAdapter(faqList);
         faqRecyclerView.setAdapter(faqAdapter);

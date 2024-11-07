@@ -512,6 +512,75 @@
                                     android:layout_height="100dp"
                                     android:layout_gravity="center"
                                     android:layout_weight="1"
+                                    android:padding="0dp"
+                                    app:cardCornerRadius="5dp"
+                                    app:cardElevation="2dp"
+                                    app:cardPreventCornerOverlap="false"
+                                    app:cardUseCompatPadding="true">
+
+                                    <ImageView
+                                        android:id="@+id/xxx"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="7dp"
+                                        android:layout_weight="1"
+                                        android:clickable="true"
+                                        app:srcCompat="@drawable/offerwall" />
+                                </androidx.cardview.widget.CardView>
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="20dp"
+                                    android:layout_weight="1"
+                                    app:cardCornerRadius="5dp"
+                                    app:cardElevation="2dp"
+                                    app:cardPreventCornerOverlap="false"
+                                    app:cardUseCompatPadding="true">
+
+                                    <ImageView
+                                        android:id="@+id/xxxx"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:clickable="true"
+                                        app:srcCompat="@drawable/spin" />
+                                </androidx.cardview.widget.CardView>
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="20dp"
+                                    android:layout_weight="1"
+                                    app:cardCornerRadius="5dp"
+                                    app:cardElevation="2dp"
+                                    app:cardPreventCornerOverlap="false"
+                                    app:cardUseCompatPadding="true">
+
+                                    <ImageView
+                                        android:id="@+id/leaderboard"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:clickable="true"
+                                        app:srcCompat="@drawable/leaderboard" />
+                                </androidx.cardview.widget.CardView>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:orientation="horizontal">
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
                                     app:cardCornerRadius="5dp"
                                     app:cardElevation="2dp"
                                     app:cardPreventCornerOverlap="false"
@@ -608,7 +677,7 @@
                                     app:cardUseCompatPadding="true">
 
                                     <ImageView
-                                        android:id="@+id/imageView13"
+                                        android:id="@+id/customer"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:layout_margin="7dp"
@@ -663,7 +732,9 @@
         android:layout_width="325dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:fitsSystemWindows="true"
+        android:paddingTop="?android:attr/actionBarSize">
         <include layout="@layout/custom_nav" />
     </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>

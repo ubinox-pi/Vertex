@@ -86,6 +86,7 @@ public class Video_task extends AppCompatActivity {
                     Data.child("v9").setValue("not");
                     Data.child("v10").setValue("not");
                     Data.child("vf").setValue("not");
+                    Data.child("Videodate").setValue(todayStr);
                 }
             }
 
@@ -100,6 +101,8 @@ public class Video_task extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_task);
+
+
 
         displayPoints();
 
@@ -147,7 +150,7 @@ public class Video_task extends AppCompatActivity {
                         if (rewardedAd != null) {
                             rewardedAd.show(context, rewardItem -> {
                                 Data.child("v1").setValue("1");
-                                Toast.makeText(context, "Task Completed", Toast.LENGTH_LONG).show();
+                                transctions transctions = new transctions(Video_task.this,'+', "0", "Video Task", "Watched successfully");
                             });
                         }
                         else {
@@ -184,7 +187,7 @@ public class Video_task extends AppCompatActivity {
                             if (rewardedAd != null) {
                                 rewardedAd.show(context, rewardItem -> {
                                     Data.child("v2").setValue("1");
-                                    Toast.makeText(context, "Task Completed", Toast.LENGTH_LONG).show();
+                                    transctions transctions = new transctions(Video_task.this,'+', "0", "Video Task", "Watched successfully");
                                 });
                             } else {
                                 Toast.makeText(context, "Ad not available yet. Please try again later.", Toast.LENGTH_SHORT).show();
@@ -228,7 +231,7 @@ public class Video_task extends AppCompatActivity {
                                 if (rewardedAd != null) {
                                     rewardedAd.show(context, rewardItem -> {
                                         Data.child("v3").setValue("1");
-                                        Toast.makeText(context, "Task Completed", Toast.LENGTH_LONG).show();
+                                        transctions transctions = new transctions(Video_task.this,'+', "0", "Video Task", "Watched successfully");
                                     });
                             }
                                 else
@@ -280,7 +283,7 @@ public class Video_task extends AppCompatActivity {
                                     if (rewardedAd != null) {
                                         rewardedAd.show(context, rewardItem -> {
                                             Data.child("v4").setValue("1");
-                                            Toast.makeText(context, "Task Completed", Toast.LENGTH_LONG).show();
+                                            transctions transctions = new transctions(Video_task.this,'+', "0", "Video Task", "Watched successfully");
                                         });
                                     }
                                     else
@@ -341,7 +344,7 @@ public class Video_task extends AppCompatActivity {
                                         if (rewardedAd != null) {
                                             rewardedAd.show(context, rewardItem -> {
                                                 Data.child("v5").setValue("1");
-                                                Toast.makeText(context, "Task Completed", Toast.LENGTH_LONG).show();
+                                                transctions transctions = new transctions(Video_task.this,'+', "0", "Video Task", "Watched successfully");
                                             });
                                         }
                                         else
@@ -410,7 +413,7 @@ public class Video_task extends AppCompatActivity {
                                             if (rewardedAd != null) {
                                                 rewardedAd.show(context, rewardItem -> {
                                                     Data.child("v6").setValue("1");
-                                                    Toast.makeText(context, "Task Completed", Toast.LENGTH_LONG).show();
+                                                    transctions transctions = new transctions(Video_task.this,'+', "0", "Video Task", "Watched successfully");
                                                 });
                                             }
                                             else
@@ -487,7 +490,7 @@ public class Video_task extends AppCompatActivity {
                                                 if (rewardedAd != null) {
                                                     rewardedAd.show(context, rewardItem -> {
                                                         Data.child("v7").setValue("1");
-                                                        Toast.makeText(context, "Task Completed", Toast.LENGTH_LONG).show();
+                                                        transctions transctions = new transctions(Video_task.this,'+', "0", "Video Task", "Watched successfully");
                                                     });
                                                 }
                                                 else
@@ -573,7 +576,7 @@ public class Video_task extends AppCompatActivity {
                                                     if (rewardedAd != null) {
                                                         rewardedAd.show(context, rewardItem -> {
                                                             Data.child("v8").setValue("1");
-                                                            Toast.makeText(context, "Task Completed", Toast.LENGTH_LONG).show();
+                                                            transctions transctions = new transctions(Video_task.this,'+', "0", "Video Task", "Watched successfully");
                                                         });
                                                     }
                                                     else
@@ -667,7 +670,7 @@ public class Video_task extends AppCompatActivity {
                                                         if (rewardedAd != null) {
                                                             rewardedAd.show(context, rewardItem -> {
                                                                 Data.child("v9").setValue("1");
-                                                                Toast.makeText(context, "Task Completed", Toast.LENGTH_LONG).show();
+                                                                transctions transctions = new transctions(Video_task.this,'+', "0", "Video Task", "Watched successfully");
                                                             });
                                                         }
                                                         else
@@ -769,7 +772,7 @@ public class Video_task extends AppCompatActivity {
                                                             if (rewardedAd != null) {
                                                                 rewardedAd.show(context, rewardItem -> {
                                                                     Data.child("v10").setValue("1");
-                                                                    Toast.makeText(context, "Task Completed", Toast.LENGTH_LONG).show();
+                                                                    transctions transctions = new transctions(Video_task.this,'+', "0", "Video Task", "Watched successfully");
                                                                 });
                                                             }
                                                             else
@@ -893,7 +896,7 @@ public class Video_task extends AppCompatActivity {
                                                                                             Users.child("coin").setValue(Coin+4.5).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                                 @Override
                                                                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                                                                    Toast.makeText(context, "Task Completed", Toast.LENGTH_LONG).show();
+                                                                                                    transctions transctions = new transctions(Video_task.this,'+', "4.5", "Video Task", "Video task completed");
                                                                                                 }
                                                                                             });
                                                                                         }

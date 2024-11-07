@@ -5,17 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app"
     android:orientation="vertical"
-    tools:context=".faq">
+    tools:context=".CustomerSupport">
     <include
-        android:id="@+id/toolbar"
+        android:id="@+id/action_app_bar"
         layout="@layout/action_app_bar"
-        app:title="FAQ" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/faqRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"/>
+        android:layout_height="wrap_content" />
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

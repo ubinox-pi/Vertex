@@ -1,6 +1,7 @@
 package com.vertex.io;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,11 +31,15 @@ import java.util.List;
 
 
 public class Withdraw extends AppCompatActivity {
+
+    pop_dialog popDialog;
     long count;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_withdraw);
+
+        popDialog = new pop_dialog(Withdraw.this);
 
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.appbar);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(Withdraw.this,R.drawable.arrow_back));
@@ -121,6 +126,7 @@ public class Withdraw extends AppCompatActivity {
             {
                 if (!amount.getText().toString().isEmpty())
                 {
+                    loading();
                     double i = Double.parseDouble(amount.getText().toString());
                     if (i >= 100)
                     {
@@ -165,12 +171,14 @@ public class Withdraw extends AppCompatActivity {
                                                             withdrawal_all.child(Txn_id).setValue(transactionDetails).addOnCompleteListener(task1 -> {
                                                                 if (task1.isSuccessful())
                                                                 {
-                                                                    Toast.makeText(Withdraw.this, "Withdrawal Success", Toast.LENGTH_SHORT).show();
+                                                                    transctions transctions = new transctions(Withdraw.this,'-', amount.getText().toString(), "Withdrawal", "Withdrawal Success");
+                                                                    loading_cancel();
                                                                     upi.setText("");
                                                                     amount.setText("");
                                                                 }
                                                                 else
                                                                 {
+                                                                    loading_cancel();
                                                                     Toast.makeText(Withdraw.this, "Withdrawal Failed", Toast.LENGTH_SHORT).show();
                                                                     with.setEnabled(true);
                                                                     with.setBackgroundResource(R.drawable.round_btn);
@@ -179,6 +187,7 @@ public class Withdraw extends AppCompatActivity {
                                                         }
                                                         else
                                                         {
+                                                            loading_cancel();
                                                             Toast.makeText(Withdraw.this, "Withdrawal Failed", Toast.LENGTH_SHORT).show();
                                                             with.setEnabled(true);
                                                             with.setBackgroundResource(R.drawable.round_btn);
@@ -188,12 +197,13 @@ public class Withdraw extends AppCompatActivity {
 
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError error) {
-
+                                                    loading_cancel();
                                                 }
                                             });
                                         }
                                         else
                                         {
+                                            loading_cancel();
                                             Toast.makeText(Withdraw.this, "Withdrawal Failed", Toast.LENGTH_SHORT).show();
                                             with.setEnabled(true);
                                             with.setBackgroundResource(R.drawable.round_btn);
@@ -202,6 +212,7 @@ public class Withdraw extends AppCompatActivity {
                                 }
                                 else
                                 {
+                                    loading_cancel();
                                     Toast.makeText(Withdraw.this, "Insufficient balance", Toast.LENGTH_SHORT).show();
                                     with.setEnabled(true);
                                     with.setBackgroundResource(R.drawable.round_btn);
@@ -211,12 +222,13 @@ public class Withdraw extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-
+                                loading_cancel();
                             }
                         });
                     }
                     else
                     {
+                        loading_cancel();
                         Toast.makeText(Withdraw.this, "Minimum withdrawal amount is 100", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -259,7 +271,20 @@ public class Withdraw extends AppCompatActivity {
         return sb.toString();
     }
 
+    public void loading(){
+        popDialog.setCancelable(false);
+        popDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.loading_popup));
+        popDialog.getWindow().setWindowAnimations(R.style.popupAnimation);
+        popDialog.getWindow().setGravity(Gravity.CENTER);
+        popDialog.create();
+        popDialog.show();
     }
+
+    public void loading_cancel(){
+        popDialog.cancel();
+    }
+
+}
 
 
 

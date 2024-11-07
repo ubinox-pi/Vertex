@@ -12,9 +12,7 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
-/**
- * TODO: document your custom view class.
- */
+
 public class withdrawal_list extends ArrayAdapter<withdraw_class> {
 
     public withdrawal_list(Context context, List<withdraw_class> withdrawals) {

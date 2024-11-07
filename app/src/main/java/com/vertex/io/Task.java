@@ -85,9 +85,14 @@ public class Task extends AppCompatActivity {
             intent.putExtra("imagelink",clickedTask.Imagelink);
             intent.putExtra("whatToDo",clickedTask.whatToDo);
             startActivity(intent);
-            Toast.makeText(this, "Clicked: " + clickedTask, Toast.LENGTH_SHORT).show();
         });
 
+        list_pending.setOnItemClickListener((parent, view, position, id) ->{
+            pending_list_data clickedTask = pendingList.get(position);
+            Intent intent = new Intent(this, pendingTask.class);
+            intent.putExtra("Id",clickedTask.Id);
+            startActivity(intent);
+        });
 
         toolbar = findViewById(R.id.appBar);
         toolbar.setNavigationIcon(R.drawable.arrow_back);

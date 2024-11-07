@@ -18,11 +18,9 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -73,6 +71,8 @@ public class Home extends AppCompatActivity {
     private RewardedAd rewardedAd;
     private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
     pop_dialog popDialog;
+
+
 
     private void showPermissionDeniedDialog() {
         new AlertDialog.Builder(this)
@@ -152,6 +152,13 @@ public class Home extends AppCompatActivity {
         ImageView math = findViewById(R.id.Math);
         math.setOnClickListener(v -> {
             Intent intent = new Intent(Home.this, Math.class);
+            startActivity(intent);
+        });
+
+
+        ImageView customer = findViewById(R.id.customer);
+        customer.setOnClickListener(v -> {
+            Intent intent = new Intent(Home.this, CustomerSupport.class);
             startActivity(intent);
         });
 
@@ -409,6 +416,12 @@ public class Home extends AppCompatActivity {
         });
 
 
+        ImageView leaderboard = findViewById(R.id.leaderboard);
+        leaderboard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, Leaderboard.class);
+            startActivity(intent);
+        });
+
         ImageView withdraw = findViewById(R.id.Withdraw);
         withdraw.setOnClickListener(v -> {
             Intent intent = new Intent(this, com.vertex.io.Withdraw.class);
@@ -438,8 +451,7 @@ public class Home extends AppCompatActivity {
                                         double c = snapshot.child("coin").getValue(double.class);
                                         User.child("coin").setValue(c + 1).addOnSuccessListener(aVoid -> {
                                             User.child("date").setValue(todayStr).addOnSuccessListener(aVoid2 -> {
-                                                Toast.makeText(context, "Daily Check In Successful", Toast.LENGTH_LONG).show();
-                                                Log.d(TAG, "You earned the reward.");
+                                                transctions transctions = new transctions(Home.this,'+', "1", "Daily Check In", "Daily Check In Successful");
                                             }).addOnFailureListener(e -> {
                                                 Toast.makeText(context, "Failed to update check-in date.", Toast.LENGTH_SHORT).show();
                                                 Log.e(TAG, "Failed to update check-in date.", e);
@@ -479,28 +491,6 @@ public class Home extends AppCompatActivity {
             }
         });
 
-    }
-
-
-    public boolean isConnectedToInternet() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnectedOrConnecting();
-    }
-
-    Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            checkInternetConnection();
-            handler.postDelayed(this, 5000);
-        }
-    };
-
-    private void checkInternetConnection() {
-        if (!isConnectedToInternet()) {
-            Intent intent = new  Intent(Home.this, No_Internet.class);
-        }
     }
 
     private final Context context = this;

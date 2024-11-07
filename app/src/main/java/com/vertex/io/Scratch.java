@@ -238,6 +238,7 @@ public class Scratch extends AppCompatActivity {
                                                 double c1 = Double.parseDouble(textView1.getText().toString());
                                                 c1 +=coin;
                                                 Point.setValue(c1);
+                                                transctions transctions = new transctions(Scratch.this,'+', "0", "Video Task", "You have earned " + log + " points");
                                             }
 
                                             @Override

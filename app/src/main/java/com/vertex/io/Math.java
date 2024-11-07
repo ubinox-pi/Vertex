@@ -213,7 +213,9 @@ public class Math extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     double coin = snapshot.getValue(double.class);
-                    User.child("coin").setValue(coin + 2).addOnCompleteListener(task -> Toast.makeText(Math.this, "Rewarded Rs2", Toast.LENGTH_SHORT).show());
+                    User.child("coin").setValue(coin + 2).addOnCompleteListener(task -> {
+                        transctions transctions = new transctions(Math.this,'+', "2", "Math Task", "You Won 2 Coin");
+                    });
                 }
 
                 @Override
@@ -228,7 +230,9 @@ public class Math extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     double coin = snapshot.getValue(double.class);
-                    User.child("coin").setValue(coin + 4).addOnCompleteListener(task -> Toast.makeText(Math.this, "Rewarded Rs4", Toast.LENGTH_SHORT).show());
+                    User.child("coin").setValue(coin + 4).addOnCompleteListener(task -> {
+                        transctions transctions = new transctions(Math.this,'+', "4", "Math Task", "You Won 4 Coin");
+                    });
                 }
 
                 @Override
@@ -243,7 +247,9 @@ public class Math extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     double coin = snapshot.getValue(double.class);
-                    User.child("coin").setValue(coin + 6).addOnCompleteListener(task -> Toast.makeText(Math.this, "Rewarded Rs6", Toast.LENGTH_SHORT).show());
+                    User.child("coin").setValue(coin + 6).addOnCompleteListener(task -> {
+                        transctions transctions = new transctions(Math.this,'+', "6", "Math Task", "You Won 6 Coin");
+                    });
                 }
 
                 @Override
@@ -258,7 +264,9 @@ public class Math extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     double coin = snapshot.getValue(double.class);
-                    User.child("coin").setValue(coin + 8).addOnCompleteListener(task -> Toast.makeText(Math.this, "Rewarded Rs8", Toast.LENGTH_SHORT).show());
+                    User.child("coin").setValue(coin + 8).addOnCompleteListener(task -> {
+                        transctions transctions = new transctions(Math.this,'+', "8", "Math Task", "You Won 8 Coin");
+                    });
                 }
 
                 @Override
@@ -273,7 +281,9 @@ public class Math extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     double coin = snapshot.getValue(double.class);
-                    User.child("coin").setValue(coin + 10).addOnCompleteListener(task -> Toast.makeText(Math.this, "Rewarded Rs10", Toast.LENGTH_SHORT).show());
+                    User.child("coin").setValue(coin + 10).addOnCompleteListener(task -> {
+                        transctions transctions = new transctions(Math.this,'+', "10", "Math Task", "You Won 10 Coin");
+                    });
                 }
 
                 @Override
@@ -288,7 +298,9 @@ public class Math extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     double coin = snapshot.getValue(double.class);
-                    User.child("coin").setValue(coin + 15).addOnCompleteListener(task -> Toast.makeText(Math.this, "Rewarded Rs15", Toast.LENGTH_SHORT).show());
+                    User.child("coin").setValue(coin + 15).addOnCompleteListener(task -> {
+                        transctions transctions = new transctions(Math.this,'+', "15", "Math Task", "You Won 15 Coin");
+                    });
                 }
 
                 @Override
@@ -303,7 +315,9 @@ public class Math extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     double coin = snapshot.getValue(double.class);
-                    User.child("coin").setValue(coin + 20).addOnCompleteListener(task -> Toast.makeText(Math.this, "Rewarded Rs20", Toast.LENGTH_SHORT).show());
+                    User.child("coin").setValue(coin + 20).addOnCompleteListener(task -> {
+                        transctions transctions = new transctions(Math.this,'+', "20", "Math Task", "You Won 20 Coin");
+                    });
                 }
 
                 @Override
@@ -318,7 +332,9 @@ public class Math extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     double coin = snapshot.getValue(double.class);
-                    User.child("coin").setValue(coin + 25).addOnCompleteListener(task -> Toast.makeText(Math.this, "Rewarded Rs25", Toast.LENGTH_SHORT).show());
+                    User.child("coin").setValue(coin + 25).addOnCompleteListener(task -> {
+                        transctions transctions = new transctions(Math.this,'+', "25", "Math Task", "You Won 25 Coin");
+                    });
                 }
 
                 @Override

@@ -263,7 +263,7 @@ public class Spin extends AppCompatActivity {
                                                     User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
                                                         if (task1.isSuccessful())
                                                         {
-                                                            Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
+                                                            transctions transctions = new transctions(Spin.this,'+', "0", "Spin Task", "You Won 0 Coin");
                                                             Button spin1 = findViewById(R.id.Spin);
                                                             spin1.setEnabled(true);
                                                             spin1.setBackgroundResource(R.drawable.round_btn);
@@ -304,7 +304,7 @@ public class Spin extends AppCompatActivity {
                                                     User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
                                                         if (task1.isSuccessful())
                                                         {
-                                                            Toast.makeText(Spin.this, "You Won 2 Coin", Toast.LENGTH_SHORT).show();
+                                                            transctions transctions = new transctions(Spin.this,'+', "2", "Spin Task", "You Won 2 Coin");
                                                             Button spin1 = findViewById(R.id.Spin);
                                                             spin1.setEnabled(true);
                                                             spin1.setBackgroundResource(R.drawable.round_btn);
@@ -345,7 +345,7 @@ public class Spin extends AppCompatActivity {
                                                     User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
                                                         if (task1.isSuccessful())
                                                         {
-                                                            Toast.makeText(Spin.this, "You Won 3 Coin", Toast.LENGTH_SHORT).show();
+                                                            transctions transctions = new transctions(Spin.this,'+', "3", "Spin Task", "You Won 3 Coin");
                                                             Button spin1 = findViewById(R.id.Spin);
                                                             spin1.setEnabled(true);
                                                             spin1.setBackgroundResource(R.drawable.round_btn);
@@ -386,7 +386,7 @@ public class Spin extends AppCompatActivity {
                                                     User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
                                                         if (task1.isSuccessful())
                                                         {
-                                                            Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
+                                                            transctions transctions = new transctions(Spin.this,'+', "0", "Spin Task", "You Won 0 Coin");
                                                             Button spin1 = findViewById(R.id.Spin);
                                                             spin1.setEnabled(true);
                                                             spin1.setBackgroundResource(R.drawable.round_btn);
@@ -427,7 +427,7 @@ public class Spin extends AppCompatActivity {
                                                     User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
                                                         if (task1.isSuccessful())
                                                         {
-                                                            Toast.makeText(Spin.this, "You Won 2 Coin", Toast.LENGTH_SHORT).show();
+                                                            transctions transctions = new transctions(Spin.this,'+', "2", "Spin Task", "You Won 2 Coin");
                                                             Button spin1 = findViewById(R.id.Spin);
                                                             spin1.setEnabled(true);
                                                             spin1.setBackgroundResource(R.drawable.round_btn);
@@ -468,7 +468,7 @@ public class Spin extends AppCompatActivity {
                                                     User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
                                                         if (task1.isSuccessful())
                                                         {
-                                                            Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
+                                                            transctions transctions = new transctions(Spin.this,'+', "0", "Spin Task", "You Won 0 Coin");
                                                             Button spin1 = findViewById(R.id.Spin);
                                                             spin1.setEnabled(true);
                                                             spin1.setBackgroundResource(R.drawable.round_btn);
@@ -509,7 +509,7 @@ public class Spin extends AppCompatActivity {
                                                     User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
                                                         if (task1.isSuccessful())
                                                         {
-                                                            Toast.makeText(Spin.this, "You Won 1 Coin", Toast.LENGTH_SHORT).show();
+                                                            transctions transctions = new transctions(Spin.this,'+', "1", "Spin Task", "You Won 1 Coin");
                                                             Button spin1 = findViewById(R.id.Spin);
                                                             spin1.setEnabled(true);
                                                             spin1.setBackgroundResource(R.drawable.round_btn);
@@ -550,7 +550,7 @@ public class Spin extends AppCompatActivity {
                                                     User.child("spin").child("spinTask").setValue(spin).addOnCompleteListener(task1 -> {
                                                         if (task1.isSuccessful())
                                                         {
-                                                            Toast.makeText(Spin.this, "You Won 0 Coin", Toast.LENGTH_SHORT).show();
+                                                            transctions transctions = new transctions(Spin.this,'+', "0", "Spin Task", "You Won 0 Coin");
                                                             Button spin1 = findViewById(R.id.Spin);
                                                             spin1.setEnabled(true);
                                                             spin1.setBackgroundResource(R.drawable.round_btn);

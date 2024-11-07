@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -37,6 +38,7 @@ public class refer extends AppCompatActivity {
     DatabaseReference pointReference;
     DatabaseReference reference;
     DatabaseReference refers;
+    Button share;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class refer extends AppCompatActivity {
         setContentView(R.layout.activity_refer);
         popDialog = new pop_dialog(refer.this);
         loading();
+        share = findViewById(R.id.share);
 
         refer = findViewById(R.id.refer_id);
         generate = findViewById(R.id.refer_generate);
@@ -79,6 +82,7 @@ public class refer extends AppCompatActivity {
                         if (snapshot.exists()){
                             refer.setText(snapshot.getValue(String.class));
                             loading_cancel();
+                            share.setVisibility(View.VISIBLE);
                         }
                         else {
                             loading_cancel();
@@ -100,6 +104,14 @@ public class refer extends AppCompatActivity {
             }
         });
 
+        share.setOnClickListener(v->{
+            String shareBody = "Hey, I am using this app and I am earning money. You can also earn money by using this app. Use my refer code "+refer.getText().toString()+" to get Rs5 real cash. Download the app from the link below\n\nhttps://play.google.com/store/apps/details?id="+getPackageName();
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Earn Money");
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+            startActivity(Intent.createChooser(sharingIntent, "Share via"));
+        });
 
         generate.setOnClickListener(v->{
             loading();

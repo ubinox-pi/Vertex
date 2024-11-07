@@ -3,9 +3,22 @@ package com.vertex.io;
 public class pending_list_data {
     String Id,name,description,LongDescription,Link,Imagelink,whatToDo;
     boolean isPending;
+    private String Url;
 
     public pending_list_data(){
         // Default constructor required for Firebase
+    }
+
+    public void setPending(boolean pending) {
+        isPending = pending;
+    }
+
+    public String getUrl() {
+        return Url;
+    }
+
+    public void setUrl(String url) {
+        Url = url;
     }
 
     public String getId() {

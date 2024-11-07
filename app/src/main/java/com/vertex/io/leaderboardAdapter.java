@@ -26,36 +26,36 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
-public class AllTaskAdapter extends ArrayAdapter<AllTaskData> {
+public class leaderboardAdapter extends ArrayAdapter<leaderBoardData> {
 
     private Context context;
-    private List<AllTaskData> taskList;
-    public String Id;
-    String link;
-    ImageView taskImage;
+    private List<leaderBoardData> leader;
+    TextView name,point;
+    ImageView imageView;
 
-    public AllTaskAdapter(Context context, List<AllTaskData> AllDataTask) {
-        super(context, R.layout.task_ui, AllDataTask);
+
+    public leaderboardAdapter(@NonNull Context context, List<leaderBoardData> list) {
+        super(context,R.layout.leaderboard_list, list);
         this.context = context;
-        this.taskList = AllDataTask;
+        this.leader = list;
     }
+
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.task_ui, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.leaderboard_list, parent, false);
         }
-        AllTaskData task = taskList.get(position);
-        TextView taskName = convertView.findViewById(R.id.Short);
-        TextView taskDescription = convertView.findViewById(R.id.Long);
-        taskImage = convertView.findViewById(R.id.images);
-        Id = task.Id;
-        taskName.setText(task.name);
-        taskDescription.setText(task.description);
-        link = task.Imagelink;
 
-        Glide.with(context)
+        leaderBoardData leaderBoardData = leader.get(position);
+        name = convertView.findViewById(R.id.profileName);
+        point = convertView.findViewById(R.id.profilePoints);
+        imageView = convertView.findViewById(R.id.profile);
+        name.setText(leaderBoardData.getName());
+        point.setText(String.valueOf(leaderBoardData.getCoin()));
+        String link = leaderBoardData.getUrl();
+        Glide.with(convertView)
                 .load(link)
                 .apply(new RequestOptions()
                         .placeholder(com.google.firebase.inappmessaging.display.R.drawable.image_placeholder) // Add a placeholder image
@@ -76,8 +76,8 @@ public class AllTaskAdapter extends ArrayAdapter<AllTaskData> {
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         return false;
                     }
-                })
-                .into(taskImage);
+                }).into(imageView);
+
 
         return convertView;
     }
