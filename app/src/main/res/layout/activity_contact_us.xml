@@ -42,6 +42,7 @@
                 android:textColorHint="@color/secondary_text"
                 android:textColor="@color/secondary_text"
                 android:padding="10dp"
+                android:layout_marginBottom="5dp"
                 android:background="@drawable/bg_app"/>
 
             <EditText
@@ -53,6 +54,7 @@
                 android:textColorHint="@color/secondary_text"
                 android:textColor="@color/secondary_text"
                 android:background="@drawable/bg_app"
+                android:layout_marginBottom="5dp"
                 android:inputType="textEmailAddress"/>
 
             <EditText

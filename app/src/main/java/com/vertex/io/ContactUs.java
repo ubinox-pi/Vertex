@@ -33,7 +33,41 @@ public class ContactUs extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference("ContactUs");
 
-        submitButton.setOnClickListener(v -> submitContactForm());
+        submitButton.setOnClickListener(v ->{
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                if (FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
+                    if (FirebaseAuth.getInstance().getCurrentUser().getUid() != null) {
+                        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(UID)) {
+                            if (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+                                if (FirebaseAuth.getInstance().getCurrentUser().getEmail().equals(emailEditText.getText().toString().trim())) {
+                                    if (!nameEditText.getText().toString().trim().isEmpty() && !emailEditText.getText().toString().trim().isEmpty() && !messageEditText.getText().toString().trim().isEmpty()) {
+                                        if (emailEditText.getText().toString().trim().contains("@") && emailEditText.getText().toString().trim().contains(".")) {
+                                            submitContactForm();
+                                        } else {
+                                            Toast.makeText(ContactUs.this, "Invalid email", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(ContactUs.this, "All fields are required", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Toast.makeText(ContactUs.this, "Email does not match with your account", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(ContactUs.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(ContactUs.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(ContactUs.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(ContactUs.this, "Please verify your email to send message", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(ContactUs.this, "Please login to send message", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void submitContactForm() {

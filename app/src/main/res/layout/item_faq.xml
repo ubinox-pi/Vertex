@@ -20,8 +20,8 @@
             android:src="@drawable/faquestion"/>
         <TextView
             android:id="@+id/questionText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center|start"
             android:textColor="@color/primary_text"
             android:textSize="18sp"

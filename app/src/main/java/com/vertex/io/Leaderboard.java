@@ -1,27 +1,15 @@
 package com.vertex.io;
 
-import static android.content.ContentValues.TAG;
-
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,16 +19,20 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import coil.ImageLoader;
+import coil.request.ImageRequest;
+
 public class Leaderboard extends AppCompatActivity {
 
     List<leaderBoardData> leader;
     DatabaseReference databaseReference;
     ListView listView;
     leaderboardAdapter adapter;
-    int count,mainCount;
-    ImageView profile1st,profile2nd,profile3rd;
+    int count, mainCount;
+    ImageView profile1st, profile2nd, profile3rd;
 
-    TextView name1,name2,name3,point1,point2,point3;
+    TextView name1, name2, name3, point1, point2, point3;
+
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -62,8 +54,8 @@ public class Leaderboard extends AppCompatActivity {
         profile2nd = findViewById(R.id.profile2nd);
         profile3rd = findViewById(R.id.profile3rd);
 
-
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+
         try {
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -94,103 +86,57 @@ public class Leaderboard extends AppCompatActivity {
                     }
 
                     if (leader.size() > 0) {
-                        name1.setText(leader.get(0).getName());
-                        point1.setText(String.valueOf(leader.get(0).getCoin()));
-                        String link = leader.get(0).getUrl();
-                        Glide.with(Leaderboard.this)
-                                .load(link)
-                                .apply(new RequestOptions()
-                                        .placeholder(R.drawable.image) // Add a placeholder image
-                                        .error(R.drawable.error) // Add an error image
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                        .override(Target.SIZE_ORIGINAL))
-                                .transition(DrawableTransitionOptions.withCrossFade())
-                                .listener(new RequestListener<Drawable>() {
-                                    @Override
-                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                        // Log the error or handle it
-                                        Log.e(TAG,"An error occurred: ", e);
-                                        e.printStackTrace();
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                        return false;
-                                    }
-                                }).into(profile1st);
+                        setProfileData(leader.get(0), name1, point1, profile1st);
                     }
                     if (leader.size() > 1) {
-                        name2.setText(leader.get(1).getName());
-                        point2.setText(String.valueOf(leader.get(1).getCoin()));
-                        String link = leader.get(1).getUrl();
-                        Toast.makeText(Leaderboard.this, link, Toast.LENGTH_LONG).show();
-                        Glide.get(Leaderboard.this).clearMemory();
-                        Glide.with(Leaderboard.this)
-                                .load(link)
-                                .apply(new RequestOptions()
-                                        .placeholder(com.google.firebase.inappmessaging.display.R.drawable.image_placeholder) // Add a placeholder image
-                                        .error(R.drawable.error) // Add an error image
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                        .override(Target.SIZE_ORIGINAL))
-                                .transition(DrawableTransitionOptions.withCrossFade())
-                                .listener(new RequestListener<Drawable>() {
-                                    @Override
-                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                        // Log the error or handle it
-                                        Log.e(TAG,"An error occurred: ", e);
-                                        e.printStackTrace();
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                        return false;
-                                    }
-                                }).into(profile2nd);
+                        setProfileData(leader.get(1), name2, point2, profile2nd);
                     }
                     if (leader.size() > 2) {
-                        name3.setText(leader.get(2).getName());
-                        point3.setText(String.valueOf(leader.get(2).getCoin()));
-                        String link = leader.get(2).getUrl();
-                        Glide.with(Leaderboard.this)
-                                .load(link)
-                                .apply(new RequestOptions()
-                                        .placeholder(com.google.firebase.inappmessaging.display.R.drawable.image_placeholder) // Add a placeholder image
-                                        .error(R.drawable.error) // Add an error image
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                        .override(Target.SIZE_ORIGINAL))
-                                .transition(DrawableTransitionOptions.withCrossFade())
-                                .listener(new RequestListener<Drawable>() {
-                                    @Override
-                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                        // Log the error or handle it
-                                        Log.e(TAG,"An error occurred: ", e);
-                                        e.printStackTrace();
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                        return false;
-                                    }
-                                }).into(profile3rd);
+                        setProfileData(leader.get(2), name3, point3, profile3rd);
+                        leader.remove(2);
                         leader.remove(1);
                         leader.remove(0);
-                        leader.remove(2);
                     }
+
                     adapter.notifyDataSetChanged();
                 }
 
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    Toast.makeText(Leaderboard.this, "Failed to load data.", Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            Toast.makeText(this, "An error occurred. Please try after some time", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "An error occurred. Please try again later.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void setProfileData(leaderBoardData data, TextView nameText, TextView pointsText, ImageView profileImage) {
+        String name = data.getName();
+        Double coinValue = data.getCoin();
+        String url = data.getUrl();
+
+        nameText.setText(name);
+        pointsText.setText(String.valueOf(coinValue));
+
+        if (url == null || url.isEmpty()) {
+            url = "https://firebasestorage.googleapis.com/v0/b/doge-69ff5.appspot.com/o/images%2Fimage_APNJZmB0fSbM9uVh88qnC6b10XS2.jpg?alt=media&token=bf04bc7f-39b9-4391-b2d5-9ddd0a9f36f1";
+        }
+
+        Uri imageUri = Uri.parse(url);
+
+        ImageLoader imageLoader = new ImageLoader.Builder(this)
+                .crossfade(true)
+                .build();
+
+        ImageRequest request = new ImageRequest.Builder(this)
+                .data(imageUri)
+                .target(profileImage)
+                .placeholder(R.drawable.profile)
+                .error(R.drawable.error)
+                .build();
+
+        imageLoader.enqueue(request);
     }
 
 }

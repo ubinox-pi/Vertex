@@ -58,7 +58,7 @@ public class leaderboardAdapter extends ArrayAdapter<leaderBoardData> {
         Glide.with(convertView)
                 .load(link)
                 .apply(new RequestOptions()
-                        .placeholder(com.google.firebase.inappmessaging.display.R.drawable.image_placeholder) // Add a placeholder image
+                        .placeholder(R.drawable.profile) // Add a placeholder image
                         .error(R.drawable.error) // Add an error image
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .override(Target.SIZE_ORIGINAL))

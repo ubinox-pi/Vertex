@@ -12,4 +12,6 @@
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
     <color name="nav">#a1a5ac</color>
+    <color name="yellow">#FFf4b400</color>
+    <color name="green">#00993D</color>
 </resources>

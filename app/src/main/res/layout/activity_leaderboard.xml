@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -38,7 +39,8 @@
                         android:id="@+id/profile2nd"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/profile_pic"/>
+                        android:src="@drawable/profile"
+                        android:scaleType="centerCrop"/>
                     <TextView
                         android:id="@+id/profileName2nd"
                         android:layout_width="wrap_content"
@@ -73,7 +75,8 @@
                         android:id="@+id/profile1st"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/profile_pic"/>
+                        android:src="@drawable/profile"
+                        android:scaleType="centerCrop"/>
                     <TextView
                         android:id="@+id/profileName1st"
                         android:layout_width="wrap_content"
@@ -108,7 +111,8 @@
                         android:id="@+id/profile3rd"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/profile_pic"/>
+                        android:src="@drawable/profile"
+                        android:scaleType="centerCrop"/>
                     <TextView
                         android:id="@+id/profileName3rd"
                         android:layout_width="wrap_content"

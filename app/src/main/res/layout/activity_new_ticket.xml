@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".newTicket">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="New Ticket"
+            android:textColor="@color/primary_text"
+            android:fontFamily="@font/calistoga"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subject"
+        android:textColor="@color/primary_text"
+        android:fontFamily="@font/calistoga"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/subjectInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter subject"
+        android:textColorHint="@color/secondary_text"
+        android:inputType="text"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/secondary_text"
+        android:padding="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:fontFamily="@font/calistoga"
+        android:textColor="@color/primary_text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/descriptionInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter description"
+        android:textColorHint="@color/secondary_text"
+        android:textColor="@color/secondary_text"
+        android:inputType="textMultiLine"
+        android:minLines="4"
+        android:gravity="top"
+        android:layout_marginTop="8dp"
+        android:padding="10dp" />
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Submit"
+        android:background="@drawable/round_btn"
+        android:fontFamily="@font/calistoga"
+        android:textColor="@color/secondary_text" />
+</LinearLayout>

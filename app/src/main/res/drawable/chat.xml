@@ -1,0 +1,27 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Main bubble background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#25D366" />
+            <corners android:radius="16dp" />
+            <padding
+                android:left="10dp"
+                android:top="8dp"
+                android:right="10dp"
+                android:bottom="8dp" />
+        </shape>
+    </item>
+
+    <!-- Arrow for the bubble -->
+    <item
+        android:gravity="bottom|end"
+        android:right="5dp"
+        android:bottom="10dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#25D366" />
+            <size
+                android:width="10dp"
+                android:height="10dp" />
+        </shape>
+    </item>
+</layer-list>

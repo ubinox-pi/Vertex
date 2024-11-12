@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/secondry_bg"
+    android:padding="10dp"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/ticket_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ticket ID: 123456"
+        android:textSize="15sp"
+        android:padding="10dp"
+        android:textColor="@color/secondary_text"
+        android:fontFamily="@font/calistoga"/>
+    <TextView
+        android:id="@+id/ticket_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date: 2021-01-01"
+        android:textSize="15sp"
+        android:padding="10dp"
+        android:textColor="@color/secondary_text"
+        android:fontFamily="@font/calistoga"/>
+    <TextView
+        android:id="@+id/ticket_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Status: Open"
+        android:textSize="15sp"
+        android:padding="10dp"
+        android:textColor="@color/secondary_text"
+        android:fontFamily="@font/calistoga"/>
+    <TextView
+        android:id="@+id/ticket_subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Subject: How to reset password?"
+        android:textSize="15sp"
+        android:padding="10dp"
+        android:textColor="@color/secondary_text"
+        android:fontFamily="@font/calistoga"/>
+    <TextView
+        android:id="@+id/ticket_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description: I forgot my password. How can I reset it?"
+        android:textSize="15sp"
+        android:padding="10dp"
+        android:textColor="@color/secondary_text"
+        android:fontFamily="@font/calistoga"/>
+    <Button
+        android:id="@+id/btn_view_ticket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_btn"
+        android:text="View Ticket"
+        android:fontFamily="@font/calistoga"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"/>
+</LinearLayout>
