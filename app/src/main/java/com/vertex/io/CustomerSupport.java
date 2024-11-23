@@ -1,11 +1,11 @@
 package com.vertex.io;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -26,13 +26,16 @@ import java.util.Objects;
 public class CustomerSupport extends AppCompatActivity {
 
     androidx.appcompat.widget.Toolbar toolbar;
-    DatabaseReference reference;
+    DatabaseReference reference,pointsReference;
     String UID;
     List<Tickets> ticketList = new ArrayList<>();
     ListView ticketListView;
     TicketsAdapter ticketsAdapter;
     pop_dialog popDialog;
     Button newTicket;
+    TextView points;
+
+    // TODO: 12-11-2024 will be add on click new ticket button to check if the user has already created a ticket or not
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class CustomerSupport extends AppCompatActivity {
         newTicket = findViewById(R.id.btn_new_ticket);
         popDialog = new pop_dialog(this);
         loading();
+        points = findViewById(R.id.point);
         ticketListView = findViewById(R.id.listView);
         ticketsAdapter = new TicketsAdapter(this, R.layout.customer_support_item, ticketList);
         toolbar = findViewById(R.id.action_app_bar);
@@ -49,6 +53,9 @@ public class CustomerSupport extends AppCompatActivity {
         UID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         reference = FirebaseDatabase.getInstance().getReference().child("Users").child(UID).child("MyTickets");
 
+
+
+        ticketListView.setAdapter(ticketsAdapter);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -58,19 +65,13 @@ public class CustomerSupport extends AppCompatActivity {
                         Tickets tickets = dataSnapshot.getValue(Tickets.class);
                         ticketList.add(tickets);
                     }
-                    ticketsAdapter.notifyDataSetChanged();
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-                    ticketList.reversed();
-                }
-                else{
                     List<Tickets> reversedList = new ArrayList<>();
                     for (int i = ticketList.size() - 1; i >= 0; i--){
                         reversedList.add(ticketList.get(i));
                     }
                     ticketList = reversedList;
+                    ticketsAdapter.notifyDataSetChanged();
                 }
-                ticketListView.setAdapter(ticketsAdapter);
                 loading_cancel();
             }
 
@@ -83,6 +84,7 @@ public class CustomerSupport extends AppCompatActivity {
 
         newTicket.setOnClickListener(v->{
             startActivity(new Intent(CustomerSupport.this, NewTicket.class));
+            finish();
         });
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -91,6 +93,23 @@ public class CustomerSupport extends AppCompatActivity {
                 finish();
             }
         });
+
+        pointsReference = FirebaseDatabase.getInstance().getReference().child("Users").child(UID).child("coin");
+        pointsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    double point = snapshot.getValue(Double.class);
+                    points.setText(String.valueOf(point));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     public void loading(){

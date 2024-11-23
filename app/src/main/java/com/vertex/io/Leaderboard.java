@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,13 +26,16 @@ import coil.request.ImageRequest;
 public class Leaderboard extends AppCompatActivity {
 
     List<leaderBoardData> leader;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference,pointsReference;
     ListView listView;
     leaderboardAdapter adapter;
     int count, mainCount;
     ImageView profile1st, profile2nd, profile3rd;
+    TextView points;
 
     TextView name1, name2, name3, point1, point2, point3;
+    androidx.appcompat.widget.Toolbar toolbar;
+    String Uid;
 
 
     @Override
@@ -39,6 +43,29 @@ public class Leaderboard extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_leaderboard);
         listView = findViewById(R.id.leaderboardList);
+
+        toolbar = findViewById(R.id.action_app_bar);
+        toolbar.setNavigationIcon(R.drawable.arrow_back);
+        toolbar.setNavigationOnClickListener(v -> finish());
+        points = findViewById(R.id.point);
+        Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        pointsReference = FirebaseDatabase.getInstance().getReference("Users").child(Uid).child("coin");
+
+        pointsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Double coinValue = snapshot.getValue(Double.class);
+                if (coinValue != null) {
+                    points.setText(String.valueOf(coinValue));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(Leaderboard.this, "Failed to load data.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         leader = new ArrayList<>();
         adapter = new leaderboardAdapter(this, leader);
@@ -133,7 +160,7 @@ public class Leaderboard extends AppCompatActivity {
                 .data(imageUri)
                 .target(profileImage)
                 .placeholder(R.drawable.profile)
-                .error(R.drawable.error)
+                .error(R.drawable.profile)
                 .build();
 
         imageLoader.enqueue(request);

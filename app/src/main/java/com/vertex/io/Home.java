@@ -71,7 +71,11 @@ public class Home extends AppCompatActivity {
     private RewardedAd rewardedAd;
     private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
     pop_dialog popDialog;
+    ImageView game;
 
+    DatabaseReference Admin = FirebaseDatabase.getInstance().getReference("Admin");
+
+    Uri instagram;
 
 
     private void showPermissionDeniedDialog() {
@@ -112,6 +116,11 @@ public class Home extends AppCompatActivity {
         ScrollView scrollView = findViewById(R.id.scroll);
         popDialog = new pop_dialog(this);
         show_loading();
+        game = findViewById(R.id.game);
+        game.setOnClickListener(v -> {
+            Intent intent = new Intent(Home.this, Games.class);
+            startActivity(intent);
+        });
 
 
         // Register a NetworkCallback to listen for changes in connectivity
@@ -272,14 +281,17 @@ public class Home extends AppCompatActivity {
             startActivity(intent);
             drawerLayout.closeDrawers();
         });
-
-        DatabaseReference msg = FirebaseDatabase.getInstance().getReference("Message");
         TextView messa = findViewById(R.id.Message_text);
-        msg.addValueEventListener(new ValueEventListener() {
+        Admin.child("Message").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String m = snapshot.child("msg").getValue(String.class);
-                messa.setText(m);
+                if (!snapshot.exists()) {
+                    messa.setText("Welcome to Vertex Earning App");
+                }
+                else {
+                    String m = snapshot.getValue(String.class);
+                    messa.setText(m);
+                }
             }
 
             @Override
@@ -479,14 +491,28 @@ public class Home extends AppCompatActivity {
         });
 
 
+        Admin.child("Instagram").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    String url = snapshot.getValue(String.class);
+                    instagram = Uri.parse(url);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         ImageView dev = findViewById(R.id.Contact_dev);
         dev.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/__raj.only__"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, instagram);
             intent.setPackage("com.instagram.android");
             try {
                 startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/" + "__raj.only__"));
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(instagram.toString()));
                 startActivity(intent);
             }
         });

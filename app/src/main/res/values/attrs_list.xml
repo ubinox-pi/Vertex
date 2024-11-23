@@ -1,8 +1,8 @@
 <resources>
     <declare-styleable name="List">
-        <attr name="exampleString" format="string" />
-        <attr name="exampleDimension" format="dimension" />
-        <attr name="exampleColor" format="color" />
-        <attr name="exampleDrawable" format="color|reference" />
+        <attr name="exampleString1" format="string" />
+        <attr name="exampleDimension1" format="dimension" />
+        <attr name="exampleColor1" format="color" />
+        <attr name="exampleDrawable1" format="color|reference" />
     </declare-styleable>
 </resources>

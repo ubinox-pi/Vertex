@@ -59,7 +59,7 @@ public class leaderboardAdapter extends ArrayAdapter<leaderBoardData> {
                 .load(link)
                 .apply(new RequestOptions()
                         .placeholder(R.drawable.profile) // Add a placeholder image
-                        .error(R.drawable.error) // Add an error image
+                        .error(R.drawable.profile) // Add an error image
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .override(Target.SIZE_ORIGINAL))
                 .transition(DrawableTransitionOptions.withCrossFade())
